@@ -338,7 +338,7 @@ class FrontendController extends Controller
             });
     
         // 取得聊天清單並初始化未讀數為 0
-        $chats = Room::with('users')
+        $rooms = Room::with('users')
             ->orderBy('updated_at', 'desc')
             ->get()
             ->map(function ($room) use ($unreadMessages) {
