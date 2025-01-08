@@ -115,7 +115,7 @@ class FrontendController extends Controller
         $data= $request->all();
         if(Auth::attempt(['email' => $data['email'], 'password' => $data['password'], 'status'=>'active'])){
             Session::put('user',$data['email']);
-            request()->session()->flash('success','Successfully login');
+            //request()->session()->flash('success','Successfully login');
             return redirect()->route('home');
         }
         else{
