@@ -352,4 +352,22 @@ class FrontendController extends Controller
     
         return response()->json($rooms);
     }
+
+    public function TokenCreate(Request $request){
+        $this->validate($request,[
+            'email'=>'required|email',
+            'password'=>'required|min:6',
+            'tokenName'=>'required|string',
+        ]);
+        $data=$request->all();
+        if(Auth::guard('web')->attempt(['email' => $data['email'], 'password' => $data['password'], 'status'=>'active'])){
+            $user = User::where('email', $data['email'])->first();
+            $token = $request->user()->createToken($data['tokenName']);
+ 
+            return ['token' => $token->plainTextToken];
+        }
+        else{
+            return redirect()->back();
+        }
+    }
 }
