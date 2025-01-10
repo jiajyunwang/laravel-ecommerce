@@ -289,19 +289,19 @@ class FrontendController extends Controller
         ]);
 
         if (auth()->user()->role == 'user') {
-            $roomExists = Chat::where('buyer_id', auth()->user()->id)->exists();
-            if (!$chatExists) {
-                Chat::create([
+            $roomExists = Room::where('buyer_id', auth()->user()->id)->exists();
+            if (!$roomExists) {
+                Room::create([
                     'buyer_id' => auth()->user()->id
                 ]);
             }
 
-            $chatId  = Chat::where('buyer_id', auth()->user()->id)->select('id')->first();
+            $chatId  = Room::where('buyer_id', auth()->user()->id)->select('id')->first();
             $chatId = $chatId->id;
 
             // 假設您有 Chat 和 Message 模型
             $message = Message::create([
-                'chat_id' => $chatId,
+                'room_id' => $chatId,
                 'sender_id' => auth()->user()->id, // 假設有登入系統
                 'content' => $validated['message'],
             ]);
@@ -314,7 +314,7 @@ class FrontendController extends Controller
 
         }elseif (auth()->user()->role == 'admin') {
             $message = Message::create([
-                'chat_id' => $validated['chatId'],
+                'room_id' => $validated['roomId'],
                 'sender_id' => auth()->user()->id, // 假設有登入系統
                 'content' => $validated['message'],
             ]);
@@ -349,7 +349,7 @@ class FrontendController extends Controller
                     'unreadCount' => $unreadCount,
                 ];
             });
-    
+
         return response()->json($rooms);
     }
 

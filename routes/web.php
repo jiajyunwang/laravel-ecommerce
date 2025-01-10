@@ -69,5 +69,5 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'admin']], function
     Route::get('/order/to-cancel/{id}', [AdminController::class, 'toCancel'])->name('admin.to-cancel');
     Route::post('/order/search', [AdminController::class, 'searchByOrderNumber'])->name('order.search');
     Route::post('/purchase/destroy-products', [ProductController::class, 'destroyProducts'])->name('destroy.products');
-    Route::get('/chat/messages', [AdminController::class, 'fetchChatMessages']);
+    Route::get('/chat/messages', [AdminController::class, 'fetchRoomMessages']);
 });

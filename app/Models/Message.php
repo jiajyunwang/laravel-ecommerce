@@ -14,7 +14,7 @@ class Message extends Model
 
     public function room()
     {
-        return $this->belongsTo(Chat::class, 'room_id');
+        return $this->belongsTo(Room::class, 'room_id');
     }
 
     protected $touches = ['room'];
