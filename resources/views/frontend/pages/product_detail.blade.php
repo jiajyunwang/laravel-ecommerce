@@ -145,12 +145,12 @@
                     page = 0;
                     reviewContainer.innerHTML = ''; 
                     observer.disconnect(); 
-                    observer = observer = new IntersectionObserver(loadMoreReviews);
                     observer.observe(loadingIndicator);
                 });
             });
 
             function loadMoreReviews(entries) {
+                console.log(entries);
                 if (entries[0].isIntersecting) {
                     loadingIndicator.textContent = '';
                     loadingIndicator.classList.add("loader");
@@ -181,21 +181,11 @@
                         reviewContainer.appendChild(reviewElement);
                     });
 
-                    if (isElementInViewport(loadingIndicator)) {
-                        loadMoreReviews([{ isIntersecting: true }]); // 手動觸發觀察器邏輯
-                    }
+                    observer.disconnect(); 
+                    observer.observe(loadingIndicator);
                 } catch (error) {
                     console.error('Error fetching reviews:', error);
                 }
-            }
-            function isElementInViewport(el) {
-                const rect = el.getBoundingClientRect();
-                return (
-                    rect.top >= 0 &&
-                    rect.left >= 0 &&
-                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-                );
             }
             function createReviewElement(review) {
                 const div = document.createElement('div');
