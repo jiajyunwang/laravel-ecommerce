@@ -1067,6 +1067,7 @@ button {
 
 .chat-list {
     width: 30%;
+	height: 459px;
     background-color: #f8f9fa;
     border-right: 1px solid #ccc;
     overflow-y: auto;
@@ -1204,6 +1205,7 @@ button {
 	font-weight: bolder ;
 	display: inline-block;
 	pointer-events: none;
+	display: none;
 }
 .unread-count{
 	margin-left: 5px;

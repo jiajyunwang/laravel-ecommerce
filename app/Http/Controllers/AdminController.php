@@ -130,6 +130,31 @@ class AdminController extends Controller
         $order->save();
         return redirect()->route('admin', ['type' => 'unhandled']);
     }
+    
+    public function fetchRoomList()
+    {
+        $unreadMessages = Message::where('is_read', 'false')
+            ->whereNotIn('sender_id', [auth()->user()->id])
+            ->get()
+            ->groupBy('room_id')
+            ->map(function ($messages) {
+                return count($messages);
+            });
+    
+        $rooms = Room::with('users')
+            ->orderBy('updated_at', 'desc')
+            ->get()
+            ->map(function ($room) use ($unreadMessages) {
+                $unreadCount = $unreadMessages->get($room->id, 0); // 取得未讀數
+                return [
+                    'id' => $room->id,
+                    'nickname' => $room->users->nickname,
+                    'unreadCount' => $unreadCount,
+                ];
+            });
+
+        return response()->json($rooms);
+    }
 
     public function fetchRoomMessages(Request $request){
         $roomId = $request->query('id');
@@ -138,8 +163,6 @@ class AdminController extends Controller
         $messageExists = Message::where('room_id', $roomId)->exists();
         if ($messageExists) {
             $messages = $this->fetchMessages($roomId);
-
-            // 按日期分組
             $groupedMessages = $messages->groupBy('date');
             return response()->json($groupedMessages);
         }
@@ -147,10 +170,17 @@ class AdminController extends Controller
     }
 
     public function fetchMessages($roomId){
-        return Message::where('room_id', $roomId)
+        $messages = Message::where('room_id', $roomId)
             ->orderBy('created_at', 'asc')
-            ->get()
-            ->map(function ($message) {
+            ->get();
+        foreach ($messages as $message) {
+            if ($message->sender_id !== auth()->user()->id){
+                $message->is_read = true;
+                $message->save();
+            }
+        }
+    
+        return $messages->map(function ($message) {
                 return [
                     'user_id' => auth()->user()->id,
                     'id' => $message->id,

@@ -12,7 +12,7 @@ use App\Http\Controllers\Auth\LoginController;
 
 Auth::routes(['register' => false]);
 
-Route::get('/ccc', [FrontendController::class, 'testConnection']);
+
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 
 Route::get('/user/login', [FrontendController::class, 'login'])->name('login.form');
@@ -31,6 +31,7 @@ Route::post('/request-action/{slug}', [FrontendController::class, 'requestAction
 Route::post('/cart-update', [CartController::class, 'update'])->name('cart.update');
 
 Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
+    Route::get('/ccc', [FrontendController::class, 'ship']);
     Route::get('/', [FrontendController::class, 'index'])->name('user');
     Route::get('/account', [FrontendController::class, 'account'])->name('account.form');
     Route::post('/account', [FrontendController::class, 'accountSubmit'])->name('account.submit');
@@ -48,9 +49,10 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('/bbb/{id}', [OrderController::class, 'bbb'])->name('bbb');
     Route::post('/order/create', [OrderController::class, 'create'])->name('order.create');
     Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
-    Route::get('/chat/messages', [FrontendController::class, 'fetchChatMessages']);
+    Route::get('/chat/messages', [FrontendController::class, 'fetchRoomMessages']);
     Route::post('/chat/send', [FrontendController::class, 'sendMessage']);
-    Route::get('/chat/chat-list', [FrontendController::class, 'fetchChatList']);
+    Route::get('/chat/unread', [FrontendController::class, 'fetchUnreadCount']);
+    Route::post('/chat/mark-as-read', [FrontendController::class, 'markAsRead']);
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'admin']], function () {
@@ -63,11 +65,12 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'admin']], function
     Route::post('/product/to-inactive/{id}', [ProductController::class, 'toInactive'])->name('to-inactive');
     Route::post('/product/to-active/{id}', [ProductController::class, 'toActive'])->name('to-active');
     Route::post('/product/destroy/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+    Route::post('/product/destroy-products', [ProductController::class, 'destroyProducts'])->name('destroy.products');
     Route::get('/order', [AdminController::class, 'purchaseType'])->name('admin.order');
     Route::get('/order/order-detail/{id}', [AdminController::class, 'orderDetail'])->name('admin.order.detail');
     Route::get('/order/to-shipping/{id}', [AdminController::class, 'toShipping'])->name('to-shipping');
     Route::get('/order/to-cancel/{id}', [AdminController::class, 'toCancel'])->name('admin.to-cancel');
     Route::post('/order/search', [AdminController::class, 'searchByOrderNumber'])->name('order.search');
-    Route::post('/purchase/destroy-products', [ProductController::class, 'destroyProducts'])->name('destroy.products');
+    Route::get('/chat/room-list', [AdminController::class, 'fetchRoomList']);
     Route::get('/chat/messages', [AdminController::class, 'fetchRoomMessages']);
 });

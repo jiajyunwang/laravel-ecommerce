@@ -10,6 +10,7 @@ class Message extends Model
         'room_id',
         'sender_id',
         'content',
+        'is_read'
     ];
 
     public function room()

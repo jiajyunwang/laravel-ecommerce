@@ -14,6 +14,7 @@ use DB;
 use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Events\SendMessage;
 use App\Events\ShippingStatusUpdated;
 use App\Services\ElasticsearchService;
 
@@ -98,7 +99,7 @@ class FrontendController extends Controller
             'nickname'=>$data['nickname'],
             'email'=>$data['email'],
             'password'=>Hash::make($data['password']),
-            'role' => 'user',
+            'role' => 'admin',
             ]);
         return $user;
     }
@@ -258,7 +259,6 @@ class FrontendController extends Controller
         if ($messageExists) {
             $messages = $this->fetchMessages($roomId);
 
-            // 按日期分組
             $groupedMessages = $messages->groupBy('date');
 
             return response()->json($groupedMessages);
@@ -267,10 +267,16 @@ class FrontendController extends Controller
     }
 
     public function fetchMessages($roomId){
-        return Message::where('room_id', $roomId)
+        $messages = Message::where('room_id', $roomId)
             ->orderBy('created_at', 'asc')
-            ->get()
-            ->map(function ($message) {
+            ->get();
+        foreach ($messages as $message) {
+            if ($message->sender_id !== auth()->user()->id){
+                $message->is_read = true;
+                $message->save();
+            }
+        }
+        return $messages->map(function ($message) {
                 return [
                     'user_id' => auth()->user()->id,
                     'id' => $message->id,
@@ -285,9 +291,9 @@ class FrontendController extends Controller
     public function sendMessage(Request $request){
         $validated = $request->validate([
             'message' => 'required|string|max:1000',
-            'roomId'=>'nullable',
+            'roomId' => 'nullable|integer',
         ]);
-
+        
         if (auth()->user()->role == 'user') {
             $roomExists = Room::where('buyer_id', auth()->user()->id)->exists();
             if (!$roomExists) {
@@ -295,62 +301,55 @@ class FrontendController extends Controller
                     'buyer_id' => auth()->user()->id
                 ]);
             }
+            
+            $roomId  = Room::where('buyer_id', auth()->user()->id)->select('id')->first();
+            $roomId = $roomId->id;
 
-            $chatId  = Room::where('buyer_id', auth()->user()->id)->select('id')->first();
-            $chatId = $chatId->id;
-
-            // 假設您有 Chat 和 Message 模型
             $message = Message::create([
-                'room_id' => $chatId,
-                'sender_id' => auth()->user()->id, // 假設有登入系統
+                'room_id' => $roomId,
+                'sender_id' => auth()->user()->id, 
                 'content' => $validated['message'],
-            ]);
-            // 回傳訊息資料
-            return response()->json([
+            ]);  
+            $messageId = $message->id;
+
+            $message = [
                 'message' => $message->content,
                 'time' => $message->created_at->format('H:i'),
                 'date' => $message->created_at->format('Y-m-d'),
-            ]);
+            ];
 
-        }elseif (auth()->user()->role == 'admin') {
+            broadcast(new SendMessage([
+                'message' => $message,
+                'roomId' => $roomId,
+                'messageId' => $messageId,
+                'role' => 'user'
+            ]));
+
+            return response()->json($message);
+
+        } elseif (auth()->user()->role == 'admin') {
             $message = Message::create([
                 'room_id' => $validated['roomId'],
-                'sender_id' => auth()->user()->id, // 假設有登入系統
+                'sender_id' => auth()->user()->id, 
                 'content' => $validated['message'],
             ]);
-            return response()->json([
+            $messageId = $message->id;
+
+            $message = [
                 'message' => $message->content,
                 'time' => $message->created_at->format('H:i'),
                 'date' => $message->created_at->format('Y-m-d'),
-            ]);
+            ];
+
+            broadcast(new SendMessage([
+                'message' => $message,
+                'roomId' => $validated['roomId'],
+                'messageId' => $messageId,
+                'role' => 'admin'
+            ]));
+
+            return response()->json($message);
         }
-    }
-
-    public function fetchChatList()
-    {
-        // 取得未讀訊息
-        $unreadMessages = Message::where('is_read', 'false')
-            ->whereNotIn('sender_id', [auth()->user()->id])
-            ->get()
-            ->groupBy('chat_id')
-            ->map(function ($messages) {
-                return count($messages);
-            });
-    
-        // 取得聊天清單並初始化未讀數為 0
-        $rooms = Room::with('users')
-            ->orderBy('updated_at', 'desc')
-            ->get()
-            ->map(function ($room) use ($unreadMessages) {
-                $unreadCount = $unreadMessages->get($room->id, 0); // 取得未讀數
-                return [
-                    'id' => $room->id,
-                    'nickname' => $room->users->nickname,
-                    'unreadCount' => $unreadCount,
-                ];
-            });
-
-        return response()->json($rooms);
     }
 
     public function TokenCreate(Request $request){
@@ -360,14 +359,46 @@ class FrontendController extends Controller
             'tokenName'=>'required|string',
         ]);
         $data=$request->all();
-        if(Auth::guard('web')->attempt(['email' => $data['email'], 'password' => $data['password'], 'status'=>'active'])){
+        if (Auth::guard('web')->attempt([
+            'email' => $data['email'], 
+            'password' => $data['password'], 
+            'status'=>'active'
+        ])) {
             $user = User::where('email', $data['email'])->first();
-            $token = $request->user()->createToken($data['tokenName']);
+            $token = $user->createToken($data['tokenName']);
  
             return ['token' => $token->plainTextToken];
-        }
-        else{
+        } else {
             return redirect()->back();
         }
     }
+
+    public function fetchUnreadCount()
+    {
+        $roomId = Room::where('buyer_id', auth()->user()->id)
+            ->select('id')
+            ->first();
+        $unreadMessages = Message::where('room_id', $roomId->id)
+            ->where('is_read', 'false')
+            ->whereNotIn('sender_id', [auth()->user()->id])
+            ->get();
+        $unreadCount = count($unreadMessages);
+
+        return response()->json($unreadCount);
+    }
+
+    public function markAsRead(Request $request)
+    {
+        $this->validate($request,[
+            'messageId' => 'required|integer',
+        ]);
+
+        $messageId = $request->messageId;
+        $message = Message::findOrFail($messageId);
+        $message->is_read = true;
+        $message->save();
+
+        return response()->json(['status' => 'success']);
+    }
 }
+

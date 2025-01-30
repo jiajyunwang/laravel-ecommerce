@@ -30,8 +30,13 @@
     @auth 
         @if(Auth::user()->role=='user')
             <div id="chat-widget">
-                <div id="chat-icon" class="chat-icon">&#128172;</div> <!-- 聊天圖示 -->
-                <div id="chat-box" class="chat-box">
+                <div id="chat-icon" class="chat-icon">
+                    <div class="unread unread-total">
+                        <div class="unread-count"></div>
+                    </div>
+                    &#128172;
+                </div>
+                <div id="chat-box" class="chat-box" data-id="{{Auth::user()->id}}">
                     <div id="chat-header">
                         <span>即時對話</span>
                         <button id="close-chat">&times;</button>
@@ -83,15 +88,7 @@
 
 @endsection
 @push('scripts')
-    <!--<script src="{{asset('build/assets/app-DG6dFtpO.js')}}"></script>
     <script>
-            window.Echo.private('user.2')
-            .listen('.UserUpdated', (e) => {
-                console.log(e.user);
-            });
-    </script>-->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
             const chatIcon = document.querySelector(".chat-icon");
             const chatBox = document.querySelector(".chat-box");
             const closeChat = document.getElementById("close-chat");
@@ -105,17 +102,34 @@
 
             let activeContact = null;
             let lastMessageDate = null;
-            let chatId = null;
+            let roomId = null;
             let unreadTotalCount = 0;
+            let isSubscribe = false;
 
             chatIcon.addEventListener("click", () => {
-                chatBox.style.display = "flex";
+                chatBox.style.display = "block";
                 chatIcon.style.display = "none";
+                messages.scrollTop = messages.scrollHeight;
+                @auth 
+                    @if(Auth::user()->role=='user')
+                        fetchMessages();
+                        roomId = chatBox.dataset.id;
+                        messageListen('admin');
+                    @else
+                        if (roomId) {
+                            adminFetchMessages(roomId, chatNickname, activeContact);
+                            messageListen('user');
+                        }
+                    @endif
+                @endauth
             });
 
             closeChat.addEventListener("click", () => {
                 chatBox.style.display = "none";
                 chatIcon.style.display = "flex";
+                if (roomId) {
+                    leaveListen();
+                }
             });
             
             contacts.addEventListener("click", (e) => {
@@ -123,23 +137,76 @@
                     if (e.target != activeContact){
                         $('.chat-input').hide();
                         $('.chat-content-header').hide();
+ 
                         if (activeContact) {
                             activeContact.classList.remove("active");
+                            Echo.leave('room.' + roomId);
+                            isSubscribe = false;
                         }
                         activeContact = e.target;
                         activeContact.classList.add("active");
 
                         messages.innerHTML = "";
-                        chatId = activeContact.dataset.id;
+                        roomId = activeContact.dataset.id;
                         chatNickname = activeContact.dataset.name;
-                        adminFetchMessages(chatId, chatNickname, activeContact);
+                        adminFetchMessages(roomId, chatNickname, activeContact);
+                        messageListen('user');
                     }
                 }
             });
 
+            async function leaveListen() {
+                if (isSubscribe === false) {
+                    await messageListen('user');
+                }
+                Echo.leave('room.' + roomId);
+                isSubscribe = false;
+            }
+
+            function messageListen(senderRole) {
+                return new Promise((resolve) => {
+                    Echo.join('room.' + roomId)
+                    .here((user) => {
+                        isSubscribe = true;
+                    })
+                    .listen('SendMessage', (e) => {
+                        if (e.role === senderRole) {
+                            let data = e.message;
+                            if (lastMessageDate !== data.date) {
+                                addDateLabel(data.date);
+                                lastMessageDate = data.date;
+                            }
+                            addMessage("remote", data.message, data.time);
+                            messages.scrollTop = messages.scrollHeight;
+                            markMessageAsRead(e.messageId);
+                        }
+                    });
+                });
+            }
+
+            async function markMessageAsRead(messageId) {
+                try {
+                    const response = await fetch('/user/chat/mark-as-read', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        body: JSON.stringify({ 
+                            messageId: messageId 
+                        })
+                    });
+
+                    const data = await response.json();
+
+                } catch (error) {
+                    console.error("Error mark messages as read:", error);
+                }
+            }
+
             async function fetchChatList() {
                 try {
-                    const response = await fetch(`/user/chat/chat-list`);
+                    const response = await fetch(`/admin/chat/room-list`);
                     const data = await response.json();
                     contacts.innerHTML = '';
                     unreadTotalCount = 0;
@@ -158,11 +225,10 @@
                         const unreadCountElement = document.createElement("div");
                         unreadCountElement.className = 'center unread-count';
                         unreadCountElement.textContent = room.unreadCount;
-                        if (room.unreadCount == 0) {
-                            unreadElement.style.display = 'none';
-                        }else {
+                        if (room.unreadCount !== 0) {
+                            unreadElement.style.display = 'block';
                             unreadTotalCount += room.unreadCount; 
-                        }
+                        } 
 
                         chatListElement.appendChild(chatNicknameElement);
                         unreadElement.appendChild(unreadCountElement);
@@ -170,27 +236,26 @@
                         contacts.appendChild(chatListElement);
 
                     });
-                    unreadCount.innerHTML = unreadTotalCount;
+                    if (unreadTotalCount !== 0) {
+                        unreadCount.innerHTML = unreadTotalCount;
+                        unreadTotal.style.display = 'block'; 
+                    }
 
                 } catch (error) {
-                    console.error("Error fetching messages:", error);
+                    console.error("Error fetching chat list:", error);
                 }
             }
 
-            async function adminFetchMessages(chatId, chatNickname, activeContact) {
+            async function adminFetchMessages(roomId, chatNickname, activeContact) {
                 try {
-                    const response = await fetch(`/admin/chat/messages?id=${chatId}`);
+                    const response = await fetch(`/admin/chat/messages?id=${roomId}`);
                     const data = await response.json();
 
-                    messages.innerHTML = ""; // 清空訊息
-
-                    // 遍歷分組的日期和訊息
+                    messages.innerHTML = "";
                     Object.entries(data).forEach(([date, messagesForDate]) => {
-                        // 插入日期標籤
                         addDateLabel(date);
                         lastMessageDate = date;
 
-                        // 插入當天的訊息
                         messagesForDate.forEach((message) => {
                             const senderClass = message.sender_id === message.user_id ? "local" : "remote";
                             addMessage(senderClass, message.message, message.time);
@@ -202,12 +267,13 @@
                     const unread = activeContact.querySelector(".unread");
                     const unreadCountElement = activeContact.querySelector(".unread-count");
                     unreadTotalCount -= unreadCountElement.textContent;
-                    if (unreadTotalCount == 0) {
-                        unreadTotal.style.display = "none";
-                    }else {
+                    if (unreadTotalCount !== 0) {
                         unreadCount.innerHTML = unreadTotalCount;
+                    } else {
+                        unreadTotal.style.display = "none";
                     }
                     unread.style.display = 'none';
+                    messages.scrollTop = messages.scrollHeight;
                 } catch (error) {
                     console.error("Error fetching messages:", error);
                 }
@@ -218,21 +284,17 @@
                     const response = await fetch(`/user/chat/messages`);
                     const data = await response.json();
 
-                    messages.innerHTML = ""; // 清空訊息
-
-                    // 遍歷分組的日期和訊息
+                    messages.innerHTML = ""; 
                     Object.entries(data).forEach(([date, messagesForDate]) => {
-                        // 插入日期標籤
                         addDateLabel(date);
                         lastMessageDate = date;
 
-                        // 插入當天的訊息
                         messagesForDate.forEach((message) => {
                             const senderClass = message.sender_id === message.user_id ? "local" : "remote";
                             addMessage(senderClass, message.message, message.time);
                         });
                     });
-
+                    messages.scrollTop = messages.scrollHeight;
                 } catch (error) {
                     console.error("Error fetching messages:", error);
                 }
@@ -260,16 +322,14 @@
                 if(sender=='local') {
                     messageWrapper.appendChild(timeElement);
                     messageWrapper.appendChild(messageElement);
-                }else{
+                } else {
                     messageWrapper.appendChild(messageElement);
                     messageWrapper.appendChild(timeElement);
                 }
                 messages.appendChild(messageWrapper);
-                messages.scrollTop = messages.scrollHeight; // 自動滾動到最新訊息
             }
 
-            // 發送訊息
-            async function sendMessageToServer(text, chatId) {
+            async function sendMessageToServer(text, roomId) {
                 try {
                     const response = await fetch('/user/chat/send', {
                         method: 'POST',
@@ -279,7 +339,7 @@
                         },
                         body: JSON.stringify({
                             message: text,
-                            chatId: chatId,
+                            roomId: roomId,
                         }),
                     });
 
@@ -294,39 +354,43 @@
                         addDateLabel(data.date);
                         lastMessageDate = data.date;
                     }
-                    // 新增訊息到畫面
                     addMessage("local", data.message, data.time);
+                    messages.scrollTop = messages.scrollHeight;
                 } catch (error) {
                     console.error("Error sending message:", error);
                 }
             }
 
-            // 監聽按下送出鍵
-            sendMessage.addEventListener("click", () => {
-                const text = messageInput.value.trim();
-                if (text === "") return; // 防止空訊息
-
-                // 送出訊息到後端並更新畫面
-                sendMessageToServer(text, chatId);
-                messageInput.value = ""; // 清空輸入框
-            });
-
-            fetchMessages();
-            fetchChatList();
-
-            /*async function fetchChatList() {
+            async function fetchUnreadCount() {
                 try {
-                    const response = await fetch(`/ccc`);
+                    const response = await fetch(`/user/chat/unread`);
                     const data = await response.json();
 
-                    console.log(data);
+                    unreadTotalCount = data
+                    if (unreadTotalCount !== 0) {
+                        unreadCount.innerHTML = unreadTotalCount;
+                        unreadTotal.style.display = 'block'; 
+                    }
+                    
                 } catch (error) {
-                    console.error("Error fetching messages:", error);
+                    console.error("Error fetching unread messages count:", error);
                 }
             }
 
-            fetchChatList();*/
-        });
+            sendMessage.addEventListener("click", () => {
+                const text = messageInput.value.trim();
+                if (text === "") return;
 
+                sendMessageToServer(text, roomId);
+                messageInput.value = ""; 
+            });
+
+            @auth 
+                @if(Auth::user()->role=='admin')
+                    fetchChatList();
+                @else
+                    fetchUnreadCount();
+                @endif
+            @endauth
     </script>
 @endpush
