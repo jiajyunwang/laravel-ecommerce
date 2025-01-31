@@ -377,6 +377,11 @@
                 }
             }
 
+            messageInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    sendMessage.click();
+                }
+            });
             sendMessage.addEventListener("click", () => {
                 const text = messageInput.value.trim();
                 if (text === "") return;
