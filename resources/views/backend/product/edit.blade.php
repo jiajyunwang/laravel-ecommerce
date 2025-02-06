@@ -9,7 +9,6 @@
         <div class="card-body">
             <form class="form" method="post" enctype="multipart/form-data" action="{{route('product.update', [$product->id])}}">
                 @csrf
-                @method('PATCH')
                 <div class="form-group">
                     <label>商品標題<span>*</span></label>
                     <input class="form-control" type="text" name="title" required="required" value="{{$product->title}}">

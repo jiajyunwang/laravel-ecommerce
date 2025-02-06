@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->unsignedBigInteger('user_id');
-            $table->float('total_amount');
+            $table->unsignedInteger('total_amount');
             $table->enum('status',['unhandled','shipping','completed','cancel'])->default('unhandled');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
             $table->string('name');
@@ -23,8 +23,8 @@ return new class extends Migration
             $table->text('address');
             $table->longText('note')->nullable();
             $table->string('payment_method');
-            $table->float('sub_total');
-            $table->float('shipping_fee');
+            $table->unsignedInteger('sub_total');
+            $table->unsignedInteger('shipping_fee');
             $table->timestamps();
         });
     }

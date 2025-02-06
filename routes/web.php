@@ -30,6 +30,8 @@ Route::post('/request-action/{slug}', [FrontendController::class, 'requestAction
 
 Route::post('/cart-update', [CartController::class, 'update'])->name('cart.update');
 
+Route::get('/product/search', [FrontendController::class, 'productSearch'])->name('product.search');
+
 Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('/ccc', [FrontendController::class, 'ship']);
     Route::get('/', [FrontendController::class, 'index'])->name('user');

@@ -112,7 +112,7 @@ class AdminController extends Controller
         $order['status'] = 'cancel';
         $order->save();
         foreach ($order['order_details'] as $orderDetail) {
-            $product = Product::where('slug', $orderDetail->slug)->first();
+            $product = Product::where('id', $orderDetail->slug)->first();
             if ( $product) {
                 $product['stock'] += $orderDetail['quantity'];
                 $product->save();

@@ -20,10 +20,26 @@ use App\Services\ElasticsearchService;
 
 class FrontendController extends Controller
 {
-    public function testConnection(){
-        $results = app(ElasticsearchService::class)->search('products', '統漿');
-        return view('frontend.ccc', compact('results'));
+    public function productSearch(Request $request, ElasticsearchService $elasticsearchService){
+        
+        $search = $request->query('search');
+        $sortBy = $request->query('sortBy', '_score');
+        $sortOrder = $request->query('sortOrder', 'desc');
+        $perPage = 30;
+        $products = $elasticsearchService->searchProducts($request, $perPage);
+        
+        foreach ($products as $product){
+            $reviewCount = count(ProductsReview::where('product_id', $product->id)->get());
+            $average = round(ProductsReview::where('product_id', $product->id)->avg('rate'), 1);
+            $percentage = ($average/5)*100;
+            $product->reviewCount = $reviewCount;
+            $product->average = $average;
+            $product->percentage = $percentage; 
+        }
+
+        return view('frontend.index', compact('products', 'search', 'sortBy', 'sortOrder'));
     }
+
     public function ship()
     {
         $userId = 2;
@@ -52,22 +68,22 @@ class FrontendController extends Controller
             ->with('products', $products);
     }
 
-    public function fetchProducts(Request $request)
-    {
-        $sortBy = $request->query('sort_by', 'created_at'); // 預設按時間排序
-        $sortOrder  = $request->query('sort_order ', 'desc'); 
-        $productId = $request->query('product_id');
+    // public function fetchProducts(Request $request)
+    // {
+    //     $sortBy = $request->query('sort_by', 'created_at'); // 預設按時間排序
+    //     $sortOrder  = $request->query('sort_order ', 'desc'); 
+    //     $productId = $request->query('product_id');
 
-        $reviews = ProductsReview::with('users')
-            ->Where('product_id', $productId)
-            ->orderBy($sortBy, $sortOrder)
-            ->paginate(5);
-        foreach($reviews as $review){
-            $review['percentage'] = ($review->rate)/5*100;
-        }
+    //     $reviews = ProductsReview::with('users')
+    //         ->Where('product_id', $productId)
+    //         ->orderBy($sortBy, $sortOrder)
+    //         ->paginate(5);
+    //     foreach($reviews as $review){
+    //         $review['percentage'] = ($review->rate)/5*100;
+    //     }
 
-        return response()->json($reviews);
-    }
+    //     return response()->json($reviews);
+    // }
 
     public function register(){
         return view('frontend.pages.register');
@@ -151,7 +167,7 @@ class FrontendController extends Controller
     }
 
     public function productDetail($slug){
-        $product = Product::firstWhere('slug', $slug);
+        $product = Product::firstWhere('id', $slug);
         $reviewCount = count(ProductsReview::with('users')->Where('product_id', $product['id'])->get());
         $average = round(ProductsReview::Where('product_id', $product['id'])->avg('rate'), 1);
         $percentage = $average/5*100;
@@ -202,7 +218,7 @@ class FrontendController extends Controller
 
         if($request->requestAction=="checkout") {
             $products = [];
-            $product = Product::where('slug', $slug)->first();
+            $product = Product::where('id', $slug)->first();
             $product['quantity'] = $request->quantity;
             $product['amount'] = $product['quantity'] * $product->price;
             array_push($products, $product); 
@@ -218,7 +234,7 @@ class FrontendController extends Controller
                     ->with('homeDeliveryFee', $homeDeliveryFee);
         }
         else {
-            $product = Product::where('slug', $slug)->first();
+            $product = Product::where('id', $slug)->first();
             if($product->stock < $request->quantity){
                 return response()->json(['notEnough' => true, 'message' => '庫存不足，請重新選取數量。']);
             }

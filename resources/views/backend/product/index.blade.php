@@ -47,7 +47,7 @@
                                 <td>
                                     <div class="product-title">
                                         <input type="checkbox" name="check[]" value="{{$product->id}}">
-                                        <a href="{{route('product-detail', [$product->slug])}}">{{$product->title}}</a>
+                                        <a href="{{route('product-detail', [$product->id])}}">{{$product->title}}</a>
                                     </div>
                                 </td>
                                 <td class="text-center"><p>{{$product->price}}</p></td>

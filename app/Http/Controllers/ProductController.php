@@ -46,12 +46,6 @@ class ProductController extends Controller
         $image->save('storage/images/'.$imageName);
         $path = 'storage/images/'.$imageName;
         $data['photo'] = $path;
-        $slug = Str::slug($request->title);
-        $count = collect(Product::firstWhere('slug',$slug))->count();
-        if($count>0){
-            $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
-        }
-        $data['slug'] = $slug;
         Product::create($data);
 
         return redirect()->route('admin');

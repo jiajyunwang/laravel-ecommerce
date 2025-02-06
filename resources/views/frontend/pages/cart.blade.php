@@ -26,7 +26,7 @@
                             <tr>
                                 <td>
                                     <input type="checkbox" name="check[]" value="{{$cart->id}}" checked>
-                                    <a class="product-title" href="{{route('product-detail', [$cart->product['slug']])}}">{{$cart->product['title']}}</a>
+                                    <a class="product-title" href="{{route('product-detail', [$cart->product['id']])}}">{{$cart->product['title']}}</a>
                                 </td>
                                 <td ><p class="text-center">${{$cart->product['price']}}</p></td>
                                 <td>

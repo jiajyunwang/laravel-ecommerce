@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('order_number');
             $table->string('slug');
             $table->string('title');
-            $table->float('price');
+            $table->unsignedInteger('price');
             $table->integer('quantity');
-            $table->float('amount');
+            $table->unsignedInteger('amount');
             $table->foreign('order_number')->references('order_number')->on('orders')->onDelete('CASCADE');
             $table->timestamps();
         });

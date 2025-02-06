@@ -11,7 +11,6 @@ class Product extends Model
 
     protected $fillable = [
         'title',
-        'slug',
         'description',
         'price',
         'photo',
@@ -19,6 +18,10 @@ class Product extends Model
         'stock',
         'is_featured',
         'condition',
+    ];
+
+    protected $casts = [
+        'price' => 'integer'
     ];
 
 }

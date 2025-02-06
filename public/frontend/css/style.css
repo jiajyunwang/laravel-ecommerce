@@ -13,6 +13,9 @@ button {
 	display: inline-block;
 	margin: 0;
 }
+.bg-light {
+	background: #f1f1f1;
+}
 /* Header */
 .bg-primary {
 	display: grid;
@@ -141,14 +144,54 @@ button {
 	border-width: 3px;
 	border-color: #ffffff;
 }
-.product-list {
+.product-area {
 	grid-column:2;
 	grid-row: 3;
+}
+.sort-by {
+	float: right;
+}
+.sort-by .cursor {
+	cursor: pointer;
+}
+.search-panel .active {
+	color: #EE4D2D;
+}
+.pagination {
+	display:flex;
+	padding-left:0;
+	list-style:none;
+}
+.page-item:not(:first-child) .page-link {
+	margin-left:-1px;
+}
+.page-item.active .page-link {
+	z-index:3;color:#fff;
+	background-color:#0d6efd;
+	border-color:#0d6efd
+}
+.page-item.disabled .page-link {
+	color:#6c757d;
+	pointer-events:none;
+	background-color:#fff;
+	border-color:#dee2e6
+}
+.page-link {
+	padding:.375rem .75rem;
+}
+.page-item:first-child .page-link {
+	border-top-left-radius:.25rem;
+	border-bottom-left-radius:.25rem;
+}
+.page-item:last-child .page-link {
+	border-top-right-radius:.25rem;
+	border-bottom-right-radius:.25rem;
+}
+.product-list {
 	position: relative;
 	background: #ffffff;
 	width: 100%;
     height: auto;
-	padding: 5px;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -169,6 +212,10 @@ button {
 	position: relative;
 	left: 5px;
 	margin: 0;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
 }
 .single-product .rate-average {
 	height: 25px;
@@ -616,7 +663,7 @@ button {
 	background-color: #ffffff;
 	margin: 10px 20px 0 0;
 } 
-.active {
+.nav-tabs .active {
 	border: 1px solid #EE4D2D !important;
 	color: #EE4D2D;
 }

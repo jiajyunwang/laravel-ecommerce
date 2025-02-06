@@ -104,7 +104,7 @@ class OrderController extends Controller
         $order['status'] = 'cancel';
         $order->save();
         foreach ($order['order_details'] as $orderDetail) {
-            $product = Product::where('slug', $orderDetail->slug)->first();
+            $product = Product::where('id', $orderDetail->slug)->first();
             if ( $product) {
                 $product['stock'] += $orderDetail['quantity'];
                 $product->save();
@@ -200,7 +200,7 @@ class OrderController extends Controller
             $orderDetail = new orderDetail;
             $orderDetail->order_number = $order_number;
             $product = Product::findOrFail($id);
-            $orderDetail->slug = $product['slug'];
+            $orderDetail->slug = $product['id'];
             $orderDetail->title = $product['title'];
             $orderDetail->price = $product['price'];
             $orderDetail->quantity = $data['quantity'][$index];
@@ -220,7 +220,7 @@ class OrderController extends Controller
             ->where('id', $id)
             ->first();
         foreach ($order['order_details'] as $item) {
-            $productExists = Product::where('slug', $item->slug)
+            $productExists = Product::where('id', $item->slug)
                 ->where('status', 'active')
                 ->exists();
             if (!$productExists) {
@@ -228,7 +228,7 @@ class OrderController extends Controller
             }
         }
         foreach ($order->order_details as $item) {
-            $product = Product::where('slug', $item->slug)
+            $product = Product::where('id', $item->slug)
                 ->where('status', 'active')
                 ->first();
             $already_cart = Cart::where('user_id', Auth::user()->id)
@@ -263,7 +263,7 @@ class OrderController extends Controller
             ->first();
         $count = 0;
         foreach($order['order_details'] as $order_detail){
-            $productId = Product::where('slug', $order_detail['slug'])
+            $productId = Product::where('id', $order_detail['slug'])
                 ->select('id')
                 ->first();
             ProductsReview::create([
