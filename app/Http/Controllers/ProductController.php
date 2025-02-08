@@ -93,7 +93,10 @@ class ProductController extends Controller
     {
         $ids = $request->check;
         foreach($ids as $id){
-            Product::findOrFail($id)->delete();
+            Product::findOrFail($id);
+            $photo = str_replace('storage', 'public', $product->photo);
+            Storage::delete($photo);
+            $product->delete();
         }
         return redirect()->route('admin');
     }
