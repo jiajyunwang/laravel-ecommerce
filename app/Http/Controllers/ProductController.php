@@ -82,8 +82,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        $photo = str_replace('storage', 'public', $product->photo);
-        Storage::delete($photo);
+        $this->imageDelete($product);
         $product->delete();
         
         return redirect()->route('admin');
@@ -93,12 +92,16 @@ class ProductController extends Controller
     {
         $ids = $request->check;
         foreach($ids as $id){
-            Product::findOrFail($id);
-            $photo = str_replace('storage', 'public', $product->photo);
-            Storage::delete($photo);
+            $product = Product::findOrFail($id);
+            $this->imageDelete($product);
             $product->delete();
         }
         return redirect()->route('admin');
+    }
+
+    public function imageDelete($product){
+        $photo = str_replace('storage', 'public', $product->photo);
+        Storage::delete($photo);
     }
 
     public function toInactive($id)
