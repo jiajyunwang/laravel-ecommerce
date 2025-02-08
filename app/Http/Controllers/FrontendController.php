@@ -40,21 +40,8 @@ class FrontendController extends Controller
         return view('frontend.index', compact('products', 'search', 'sortBy', 'sortOrder'));
     }
 
-    public function ship()
-    {
-        $userId = 2;
-        $user = user::findOrFail($userId);
-
-        broadcast(new ShippingStatusUpdated($user));
-
-        return response()->json([
-            'status' => 'success',
-            'message' => '898'
-        ]);
-    }
-
     public function index(){
-        $products = Product::all();
+        $products = Product::paginate(30);
         foreach ($products as $product) {
             $reviewCount = count(ProductsReview::with('users')->Where('product_id', $product['id'])->get());
             $average = round(ProductsReview::Where('product_id', $product['id'])->avg('rate'), 1);

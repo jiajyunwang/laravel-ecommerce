@@ -47,9 +47,7 @@
                 </div>
             @endforeach
         </div>
-        @if(isset($search))
-            <div class="bg-light center">{{ $products->links() }}</div>
-        @endif
+        <div class="bg-light center">{{ $products->links() }}</div>
     </div>
     
 
@@ -115,7 +113,6 @@
 @endsection
 @push('scripts')
     <script>
-        const productList = $('.product-list');
         let sortBy = null;
         let sortOrder = null;
         let search = null;
