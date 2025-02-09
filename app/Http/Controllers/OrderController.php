@@ -113,24 +113,6 @@ class OrderController extends Controller
         return redirect()->route('user.order', ['type' => 'unhandled']);
     }
 
-    public function aaa($id)
-    {
-        $order = Order::where('user_id', Auth::user()->id)
-            ->where('id', $id)
-            ->first();
-        $order['status'] = 'unhandled';
-        $order->save();
-    }
-
-    public function bbb($id)
-    {
-        $order = Order::where('user_id', Auth::user()->id)
-            ->where('id', $id)
-            ->first();
-        $order['status'] = 'shipping';
-        $order->save();
-    }
-
     public function create(Request $request)
     {
         $carts = [];

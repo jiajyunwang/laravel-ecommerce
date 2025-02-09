@@ -15,11 +15,9 @@
                             <div class="review">
                                 <p>{{$detail->title}}</p>
                                 <div class="rating-box rating-{{$order->id}}" data-index="{{$index}}">
-                                    <span id="star-1" class="empty-stars" field="{{$order->id}}"></span>
-                                    <span id="star-2" class="empty-stars" field="{{$order->id}}"></span>
-                                    <span id="star-3" class="empty-stars" field="{{$order->id}}"></span>
-                                    <span id="star-4" class="empty-stars" field="{{$order->id}}"></span>
-                                    <span id="star-5" class="empty-stars" field="{{$order->id}}"></span>
+                                    @for ($i=1; $i<=5; $i++)
+                                        <span id="star-{{$i}}" class="empty-stars" field="{{$order->id}}"></span>
+                                    @endfor
                                 </div>
                                 <div class="review-inner">
                                     <textarea class="comment" name="review[]"></textarea>

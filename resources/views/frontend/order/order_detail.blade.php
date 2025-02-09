@@ -103,8 +103,6 @@
                 </div>
             </div>
             <div class="button">
-            <a href="{{route('aaa', [$order->id])}}">aaa</a>
-            <a href="{{route('bbb', [$order->id])}}">bbb</a>
                 @if($type=='unhandled')
                     <form method="GET" action="{{route('to-cancel', $order->id)}}">
                         @csrf

@@ -33,7 +33,6 @@ Route::post('/cart-update', [CartController::class, 'update'])->name('cart.updat
 Route::get('/product/search', [FrontendController::class, 'productSearch'])->name('product.search');
 
 Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
-    Route::get('/ccc', [FrontendController::class, 'ship']);
     Route::get('/', [FrontendController::class, 'index'])->name('user');
     Route::get('/account', [FrontendController::class, 'account'])->name('account.form');
     Route::post('/account', [FrontendController::class, 'accountSubmit'])->name('account.submit');
@@ -47,8 +46,6 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('/order/to-completed/{id}', [OrderController::class, 'toCompleted'])->name('to-completed');
     Route::get('/order/to-cancel/{id}', [OrderController::class, 'toCancel'])->name('to-cancel');
     Route::get('/order/{id}/repurchase', [OrderController::class, 'repurchase'])->name('order.repurchase');
-    Route::get('/aaa/{id}', [OrderController::class, 'aaa'])->name('aaa');
-    Route::get('/bbb/{id}', [OrderController::class, 'bbb'])->name('bbb');
     Route::post('/order/create', [OrderController::class, 'create'])->name('order.create');
     Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
     Route::get('/chat/messages', [FrontendController::class, 'fetchRoomMessages']);

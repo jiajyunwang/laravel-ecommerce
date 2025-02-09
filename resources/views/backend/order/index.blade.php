@@ -117,7 +117,7 @@
         $(document).ready(function() {
             setTimeout(function() {
                 $('.popup-content').fadeOut('slow');
-            }, 3000); // 提示框3秒後消失
+            }, 3000); 
         });
     </script>
 @endpush

@@ -107,7 +107,7 @@
                     }
                 });
                 $.ajax({
-                    url: "http://127.0.0.1:8000/cart-update",
+                    url: "/cart-update",
                     method: "post",
                     data: {
                         product_id: fieldName,
@@ -144,7 +144,7 @@
                     }
                 });
                 $.ajax({
-                    url: "http://127.0.0.1:8000/cart-update",
+                    url: "/cart-update",
                     method: "post",
                     data: {
                         product_id: fieldName,
@@ -192,7 +192,7 @@
                     }
                 });
                 $.ajax({
-                    url: "http://127.0.0.1:8000/cart-update",
+                    url: "/cart-update",
                     method: "post",
                     data: {
                         product_id: fieldName,

@@ -55,23 +55,6 @@ class FrontendController extends Controller
             ->with('products', $products);
     }
 
-    // public function fetchProducts(Request $request)
-    // {
-    //     $sortBy = $request->query('sort_by', 'created_at'); // 預設按時間排序
-    //     $sortOrder  = $request->query('sort_order ', 'desc'); 
-    //     $productId = $request->query('product_id');
-
-    //     $reviews = ProductsReview::with('users')
-    //         ->Where('product_id', $productId)
-    //         ->orderBy($sortBy, $sortOrder)
-    //         ->paginate(5);
-    //     foreach($reviews as $review){
-    //         $review['percentage'] = ($review->rate)/5*100;
-    //     }
-
-    //     return response()->json($reviews);
-    // }
-
     public function register(){
         return view('frontend.pages.register');
     }
