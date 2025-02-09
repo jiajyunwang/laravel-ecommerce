@@ -161,7 +161,7 @@ class OrderController extends Controller
         while($count>0){
             $random = Str::random(8);
             $random = Str::upper($random);
-            $carbon = Carbon::now('Asia/Taipei')->isoFormat('YMD');
+            $carbon = Carbon::now('Asia/Taipei')->isoFormat('YMMDD');
             $order_number = $carbon.$random;
             $count = collect(Order::firstWhere('order_number',$order_number))->count();
         }
