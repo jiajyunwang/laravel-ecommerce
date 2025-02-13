@@ -147,7 +147,8 @@ class AdminController extends Controller
             ->map(function ($room) use ($unreadMessages) {
                 $unreadCount = $unreadMessages->get($room->id, 0); // 取得未讀數
                 return [
-                    'id' => $room->id,
+                    'roomId' => $room->id,
+                    'userId' => $room->buyer_id,
                     'nickname' => $room->users->nickname,
                     'unreadCount' => $unreadCount,
                 ];

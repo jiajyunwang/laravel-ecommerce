@@ -15,7 +15,7 @@ class SendMessage implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
-    public $roomId;
+    public $userId;
     public $role;
     public $messageId;
     /**
@@ -24,7 +24,7 @@ class SendMessage implements ShouldBroadcast
     public function __construct($chat)
     {
         $this->message = $chat['message'];
-        $this->roomId = $chat['roomId'];
+        $this->userId = $chat['userId'];
         $this->role = $chat['role'];
         $this->messageId = $chat['messageId'];
     }
@@ -37,7 +37,7 @@ class SendMessage implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('room.'.$this->roomId),
+            new PresenceChannel('user.'.$this->userId),
         ];
     }
 }

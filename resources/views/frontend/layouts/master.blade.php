@@ -11,6 +11,8 @@
     @yield('main-content')
 
     @include('frontend.layouts.footer')
+
+    @include('frontend.layouts.chat')
     
 </body>
 </html>

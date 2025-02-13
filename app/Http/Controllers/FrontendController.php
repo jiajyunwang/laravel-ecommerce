@@ -15,7 +15,6 @@ use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SendMessage;
-use App\Events\ShippingStatusUpdated;
 use App\Services\ElasticsearchService;
 
 class FrontendController extends Controller
@@ -85,7 +84,7 @@ class FrontendController extends Controller
             'nickname'=>$data['nickname'],
             'email'=>$data['email'],
             'password'=>Hash::make($data['password']),
-            'role' => 'admin',
+            'role' => 'user',
             ]);
         return $user;
     }
@@ -102,7 +101,6 @@ class FrontendController extends Controller
         $data= $request->all();
         if(Auth::attempt(['email' => $data['email'], 'password' => $data['password'], 'status'=>'active'])){
             Session::put('user',$data['email']);
-            //request()->session()->flash('success','Successfully login');
             return redirect()->route('home');
         }
         else{
@@ -306,7 +304,7 @@ class FrontendController extends Controller
 
             broadcast(new SendMessage([
                 'message' => $message,
-                'roomId' => $roomId,
+                'userId' => auth()->user()->id,
                 'messageId' => $messageId,
                 'role' => 'user'
             ]));
@@ -327,9 +325,10 @@ class FrontendController extends Controller
                 'date' => $message->created_at->format('Y-m-d'),
             ];
 
+            $userId  = Room::where('id', $validated['roomId'])->select('buyer_id')->first();
             broadcast(new SendMessage([
                 'message' => $message,
-                'roomId' => $validated['roomId'],
+                'userId' => $userId->buyer_id,
                 'messageId' => $messageId,
                 'role' => 'admin'
             ]));
@@ -369,7 +368,7 @@ class FrontendController extends Controller
             ->whereNotIn('sender_id', [auth()->user()->id])
             ->get();
         $unreadCount = count($unreadMessages);
-
+        
         return response()->json($unreadCount);
     }
 
