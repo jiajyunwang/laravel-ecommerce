@@ -9,7 +9,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
-use App\Models\ProductsReview;
+use App\Models\ProductReview;
 use Auth;
 use Carbon\Carbon;
 
@@ -192,7 +192,7 @@ class OrderController extends Controller
         }
         $products = Product::all();
         
-        return $this->index(new Request());
+        return redirect()->route('user.order');
     }
 
     public function repurchase($id) 
@@ -248,7 +248,7 @@ class OrderController extends Controller
             $productId = Product::where('id', $order_detail['slug'])
                 ->select('id')
                 ->first();
-            ProductsReview::create([
+            $review = ProductReview::create([
                 'user_id'=>$order['user_id'],
                 'product_id'=>$productId->id,
                 'rate'=>$data['rate'][$count],
@@ -256,6 +256,9 @@ class OrderController extends Controller
                 ]);
             $count++;
         }
+        $order->isReview = true;
+        $order->save();
+
         return redirect()->back();
     }
 }

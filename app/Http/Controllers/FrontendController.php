@@ -5,7 +5,7 @@ use App\Models\Cart;
 use App\Models\Room;
 use App\Models\Message;
 use App\Models\Product;
-use App\Models\ProductsReview;
+use App\Models\ProductReview;
 use App\Models\User;
 use Auth;
 use Session;
@@ -28,8 +28,8 @@ class FrontendController extends Controller
         $products = $elasticsearchService->searchProducts($request, $perPage);
         
         foreach ($products as $product){
-            $reviewCount = count(ProductsReview::where('product_id', $product->id)->get());
-            $average = round(ProductsReview::where('product_id', $product->id)->avg('rate'), 1);
+            $reviewCount = count(ProductReview::where('product_id', $product->id)->get());
+            $average = round(ProductReview::where('product_id', $product->id)->avg('rate'), 1);
             $percentage = ($average/5)*100;
             $product->reviewCount = $reviewCount;
             $product->average = $average;
@@ -42,8 +42,8 @@ class FrontendController extends Controller
     public function index(){
         $products = Product::paginate(30);
         foreach ($products as $product) {
-            $reviewCount = count(ProductsReview::with('users')->Where('product_id', $product['id'])->get());
-            $average = round(ProductsReview::Where('product_id', $product['id'])->avg('rate'), 1);
+            $reviewCount = count(ProductReview::with('users')->Where('product_id', $product['id'])->get());
+            $average = round(ProductReview::Where('product_id', $product['id'])->avg('rate'), 1);
             $percentage = $average/5*100;
             $product['reviewCount'] = $reviewCount;
             $product['average'] = $average;
@@ -136,12 +136,12 @@ class FrontendController extends Controller
 
     public function productDetail($slug){
         $product = Product::firstWhere('id', $slug);
-        $reviewCount = count(ProductsReview::with('users')->Where('product_id', $product['id'])->get());
-        $average = round(ProductsReview::Where('product_id', $product['id'])->avg('rate'), 1);
+        $reviewCount = count(ProductReview::with('users')->Where('product_id', $product['id'])->get());
+        $average = round(ProductReview::Where('product_id', $product['id'])->avg('rate'), 1);
         $percentage = $average/5*100;
         $homeDeliveryFee = config('shipping.home_delivery');
 
-        $reviews = ProductsReview::with('users')
+        $reviews = ProductReview::with('users')
             ->Where('product_id', $product['id'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -164,7 +164,7 @@ class FrontendController extends Controller
         $sortOrder  = $request->query('sort_order'); 
         $productId = $request->query('product_id');
 
-        $reviews = ProductsReview::with('users')
+        $reviews = ProductReview::with('users')
             ->Where('product_id', $productId)
             ->orderBy($sortBy, $sortOrder)
             ->paginate(10);

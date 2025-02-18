@@ -59,8 +59,8 @@
                 <div class="payments">
                     <label>付款方式</label>
                     <div class="nav-tabs">
-                        <button id="btn1" class="btn active" type="button">貨到付款</button>
-                        <button class="btn btn-prohibit" type="button">信用卡</button>
+                        <button class="btn active" type="button">貨到付款</button>
+                        <!-- <button class="btn btn-prohibit" type="button">信用卡</button> -->
                     </div>
                     <input type="hidden" id="paymentMethod" name="paymentMethod" value="COD">
                 </div>
@@ -89,24 +89,3 @@
         </form>
     </div>
 @endsection
-@push('scripts')
-	<script>
-        var btn1 = document.querySelector('#btn1');
-        var btn2 = document.querySelector('#btn2');
-
-        btn1.addEventListener('click', function() {
-            btn1.classList.add('active');
-            btn2.classList.remove('active');
-            document.getElementById('paymentMethod').value = 'COD';
-        });
-        btn2.addEventListener('click', function() {
-            btn1.classList.remove('active');
-            btn2.classList.add('active');
-        });
-    </script>
-    <script>
-        $("#checkout").off().one("click", function(){
-            $("#form-checkout").submit();
-        });
-    </script>
-@endpush

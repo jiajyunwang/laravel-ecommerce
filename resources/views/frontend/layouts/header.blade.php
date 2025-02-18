@@ -9,7 +9,7 @@
         @endphp
         <a href="{{route('cart')}}">
             <i class="ti-shopping-cart-full"></i>
-            <p class="text-transparent" >購物車(<p class="count">{{$count}}</p>)</p>
+            <p class="text-transparent" >購物車(<span class="count">{{$count}}</span>)</p>
         </a>&emsp;
         <ul class="dropdown">    
             <li><a>{{Auth::user()->email}}</a>

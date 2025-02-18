@@ -1,37 +1,5 @@
 @foreach($orders as $order)
-    <div id="hidden" class="popup-bg order-{{$order->id}}">
-        <div class="review-popup">
-            <form id="form-{{$order->id}}" name="form" method="POST" action="{{route('review')}}">
-                @csrf
-                <input type="hidden" name="order_id" value="{{$order->id}}">
-                @php
-                    $index = 0;
-                @endphp
-                @foreach($order['order_details'] as $detail)
-                    <div class="review">
-                        <p>{{$detail->title}}</p>
-                        <div class="rating-box rating-{{$order->id}}" data-index="{{$index}}">
-                            <span id="star-1" class="empty-stars" field="{{$order->id}}"></span>
-                            <span id="star-2" class="empty-stars" field="{{$order->id}}"></span>
-                            <span id="star-3" class="empty-stars" field="{{$order->id}}"></span>
-                            <span id="star-4" class="empty-stars" field="{{$order->id}}"></span>
-                            <span id="star-5" class="empty-stars" field="{{$order->id}}"></span>
-                        </div>
-                        <div class="review-inner">
-                            <textarea class="comment" name="review[]"></textarea>
-                        </div>
-                        <input type="hidden" id="rate-{{$order->id}}-{{$index++}}" name="rate[]">
-                    </div>
-                @endforeach
-            </form>
-            <div class="button">
-                <button class="btn right btn-accent hide btn-accent-{{$order->id}}" form="form-{{$order->id}}">送出</button>
-                <button class="btn right btn-prohibit btn-prohibit-{{$order->id}}" type="button">送出</button>
-                <button class="btn right btn-dark" type="button" field="{{$order->id}}">取消</button>
-            </div>
-            </form>
-        </div>
-    </div>
+@include('frontend.layouts.order_review')
     <div class="content">
         <div class="order-header">
             @if($type=='unhandled')
@@ -80,7 +48,12 @@
                     <button class="btn m-t-m m-r-m btn-accent">完成訂單</button>
                 </form>
             @elseif($type=='completed')
-                <button class="btn m-t-m m-r-m btn-accent btn-review" onClick="act1({{$order->id}});">評價</button>
+                @if(!$order->isReview)
+                    <button class="btn m-t-m m-r-m btn-accent btn-review" data-order-id="{{$order->id}}">評價</button>
+                @endif
+                <button id="again" class="btn m-t-m m-r-m btn-dark" data-order-id="{{$order->id}}">重新購買</button>
+            @elseif($type=='cancel')
+                <button id="again" class="btn m-t-m btn-dark" data-order-id="{{$order->id}}">重新購買</button>
             @endif
         </div>
     </div>
