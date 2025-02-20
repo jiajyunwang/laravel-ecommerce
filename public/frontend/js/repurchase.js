@@ -1,6 +1,6 @@
 $(function() {
-    $('#again').click(function(){
-        let orderId = $(this).data();
+    $(document).on('click', '#again', function() {
+        let orderId = $(this).data('orderId');
         repurchase(orderId);
     });
 

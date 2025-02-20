@@ -69,13 +69,4 @@ $(function() {
             $(`.order-${orderId}`).show();
         } 
     });
-
-    // $('.btn-review').click(function(){
-    //     console.log(1);
-    //     let orderId = this.dataset.orderId;
-    //     console.log(orderId);
-    //     openReview(orderId);
-    // });
-
-    
 });
