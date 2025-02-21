@@ -18,6 +18,7 @@ class Product extends Model
         'stock',
         'is_featured',
         'condition',
+        'status'
     ];
 
     protected $casts = [

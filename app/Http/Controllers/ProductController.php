@@ -8,6 +8,7 @@ use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Cart;
 use App\Models\Brand;
 
 use Illuminate\Support\Str;
@@ -46,6 +47,7 @@ class ProductController extends Controller
         $image->save('storage/images/'.$imageName);
         $path = 'storage/images/'.$imageName;
         $data['photo'] = $path;
+        $data['status'] = 'active';
         Product::create($data);
 
         return redirect()->route('admin');
@@ -111,6 +113,12 @@ class ProductController extends Controller
             ->first();
         $product['status'] = 'inactive';
         $product->save();
+
+        $carts = Cart::where('product_id', $id)->get();
+        foreach ($carts as $cart) {
+            $cart->delete();
+        }
+
         return redirect()->route('admin');
     }
 
@@ -121,6 +129,7 @@ class ProductController extends Controller
             ->first();
         $product['status'] = 'active';
         $product->save();
+
         return redirect()->route('admin', ['type' => 'unlisted']);
     }
 }

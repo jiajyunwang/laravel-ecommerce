@@ -135,7 +135,7 @@ class FrontendController extends Controller
     }
 
     public function productDetail($slug){
-        $product = Product::firstWhere('id', $slug);
+        $product = Product::where('id', $slug)->where('status', 'active')->first();
         $reviewCount = count(ProductReview::with('users')->Where('product_id', $product['id'])->get());
         $average = round(ProductReview::Where('product_id', $product['id'])->avg('rate'), 1);
         $percentage = $average/5*100;

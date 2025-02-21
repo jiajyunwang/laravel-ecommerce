@@ -37,10 +37,23 @@ class ElasticsearchService
                     ]
                 ],
                 'query' => [
-                    'match' => [
-                        'title' => [
-                            'query' => $query,
-                            'fuzziness' => 'AUTO'
+                    'bool' => [
+                        'must' => [
+                            [
+                                'match' => [
+                                    'title' => [
+                                        'query' => $query,
+                                        'fuzziness' => 'AUTO'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'filter' => [
+                            [
+                                'term' => [
+                                    'status' => 'active'
+                                ]
+                            ]
                         ]
                     ]
                 ]
