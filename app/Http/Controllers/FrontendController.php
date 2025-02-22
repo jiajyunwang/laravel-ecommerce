@@ -40,7 +40,7 @@ class FrontendController extends Controller
     }
 
     public function index(){
-        $products = Product::paginate(30);
+        $products = Product::where('status', 'active')->paginate(30);
         foreach ($products as $product) {
             $reviewCount = count(ProductReview::with('users')->Where('product_id', $product['id'])->get());
             $average = round(ProductReview::Where('product_id', $product['id'])->avg('rate'), 1);

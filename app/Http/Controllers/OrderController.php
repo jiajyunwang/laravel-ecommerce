@@ -10,47 +10,35 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Services\OrderService;
 use Auth;
 use Carbon\Carbon;
 
 class OrderController extends Controller
 {
+    protected $order;
+    public function __construct(OrderService $order)
+    {
+        $this->order = $order;
+    }
+
     public function index(Request $request){
         $type = $request->query('type');
         $unhandledCol = $shippingCol = $completedCol = $cancelCol = 'col';
         if ($type==null || $type=='unhandled'){
-            $orders =  Order::with('order_details')
-                ->where('user_id', Auth::user()->id)
-                ->where('status', 'unhandled')
-                ->orderBy('created_at', 'desc')
-                ->paginate(5);
-            $unhandledCol = 'border';
             $type = 'unhandled';
+            $unhandledCol = 'border';
         }
         elseif ($type == 'shipping'){
-            $orders =  Order::with('order_details')
-                ->where('user_id', Auth::user()->id)
-                ->where('status', 'shipping')
-                ->orderBy('created_at', 'desc')
-                ->paginate(5);
             $shippingCol = 'border';
         }
         elseif ($type == 'completed'){
-            $orders =  Order::with('order_details')
-                ->where('user_id', Auth::user()->id)
-                ->where('status', 'completed')
-                ->orderBy('created_at', 'desc')
-                ->paginate(5);
             $completedCol = 'border';
         }
         elseif ($type == 'cancel'){
-            $orders =  Order::with('order_details')
-                ->where('user_id', Auth::user()->id)
-                ->where('status', 'cancel')
-                ->orderBy('created_at', 'desc')
-                ->paginate(5);
             $cancelCol = 'border';
         }
+        $orders = $this->order->userPaginate($type);
 
         return view('frontend.order.index')
                     ->with('unhandledCol', $unhandledCol)
@@ -64,21 +52,15 @@ class OrderController extends Controller
     public function fetchOrders(Request $request)
     { 
         $type = $request->query('type');
-        $orders = Order::with('order_details')
-            ->where('user_id', Auth::user()->id)
-            ->where('status', $type)
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        $orders = $this->order->userPaginate($type);
 
         return view('frontend.layouts.order', compact('orders', 'type'))->render();
     }
 
     public function orderDetail($id){
-        $order = Order::with('order_details')
-            ->where('user_id', Auth::user()->id)
-            ->where('id', $id)
-            ->first();
+        $order = $this->order->userFind($id);
         $type = $order['status'];
+
         return view('frontend.order.order_detail')
                 ->with('order', $order)
                 ->with('type', $type);
@@ -86,23 +68,16 @@ class OrderController extends Controller
 
     public function toCompleted($id)
     {
-        $order = Order::where('user_id', Auth::user()->id)
-            ->where('status', 'shipping')
-            ->where('id', $id)
-            ->first();
-        $order['status'] = 'completed';
-        $order->save();
+        $status = ['status' => 'completed'];
+        $order = $this->order->userUpdateStatus($id, $status);
+
         return redirect()->route('user.order', ['type' => 'shipping']);
     }
 
     public function toCancel($id)
     {
-        $order = Order::where('user_id', Auth::user()->id)
-            ->where('status', 'unhandled')
-            ->where('id', $id)
-            ->first();
-        $order['status'] = 'cancel';
-        $order->save();
+        $status = ['status' => 'cancel'];
+        $order = $this->order->userUpdateStatus($id, $status);
         foreach ($order['order_details'] as $orderDetail) {
             $product = Product::where('id', $orderDetail->slug)->first();
             if ( $product) {
@@ -156,31 +131,12 @@ class OrderController extends Controller
             }
         }
 
-        $order = new Order;
-        $count = 1;
-        while($count>0){
-            $random = Str::random(8);
-            $random = Str::upper($random);
-            $carbon = Carbon::now('Asia/Taipei')->isoFormat('YMMDD');
-            $order_number = $carbon.$random;
-            $count = collect(Order::firstWhere('order_number',$order_number))->count();
-        }
-        $order->order_number = $order_number;
-        $order->user_id = auth()->user()->id;
-        $order->total_amount = $data['totalAmount'];
-        $order->name = $data['name'];
-        $order->phone = $data['cellphone'];
-        $order->address = $data['address'];
-        $order->note = $data['note'];
-        $order->payment_method = $data['paymentMethod'];
-        $order->sub_total = $data['subTotal'];
-        $order->shipping_fee = $data['shippingFee'];
-        $order->save();
+        $order = $this->order->create($data);
 
         $index = 0;
         foreach($ids as $id){
             $orderDetail = new orderDetail;
-            $orderDetail->order_number = $order_number;
+            $orderDetail->order_number = $order->order_number;
             $product = Product::findOrFail($id);
             $orderDetail->slug = $product['id'];
             $orderDetail->title = $product['title'];
@@ -197,10 +153,8 @@ class OrderController extends Controller
 
     public function repurchase($id) 
     {
-        $order = Order::with('order_details')
-            ->where('user_id', Auth::user()->id)
-            ->where('id', $id)
-            ->first();
+        $order = $this->order->userFind($id);
+
         foreach ($order['order_details'] as $item) {
             $productExists = Product::where('id', $item->slug)
                 ->where('status', 'active')
@@ -239,10 +193,8 @@ class OrderController extends Controller
 
     public function review(Request $request){
         $data = $request->all();
-        $order = Order::with('order_details')
-            ->where('user_id', Auth::user()->id)
-            ->where('id', $data['order_id'])
-            ->first();
+        $order = $this->order->userFind($data['order_id']);
+
         $count = 0;
         foreach($order['order_details'] as $order_detail){
             $productId = Product::where('id', $order_detail['slug'])
