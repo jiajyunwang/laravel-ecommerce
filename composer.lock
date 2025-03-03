@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d181e57a0a4739384127af43ee187a3",
+    "content-hash": "02ca3281048d9ffab7fe1342d1d18756",
     "packages": [
         {
             "name": "babenkoivan/elastic-adapter",
@@ -10670,7 +10670,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "ext-pdo_mysql": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"

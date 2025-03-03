@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('payment_method');
             $table->unsignedInteger('sub_total');
             $table->unsignedInteger('shipping_fee');
-            $table->boolean('isReview')->default('false');
+            $table->boolean('isReview')->default(0);
             $table->timestamps();
         });
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('room_id');
             $table->unsignedBigInteger('sender_id');
             $table->longText('content');
-            $table->boolean('is_read')->default('false');
+            $table->boolean('is_read')->default(0);
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('CASCADE');
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('CASCADE');
             $table->timestamps();
