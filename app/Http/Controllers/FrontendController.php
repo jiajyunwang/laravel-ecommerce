@@ -84,7 +84,7 @@ class FrontendController extends Controller
             'nickname'=>$data['nickname'],
             'email'=>$data['email'],
             'password'=>Hash::make($data['password']),
-            'role' => 'admin',
+            'role' => 'user',
             ]);
         return $user;
     }
@@ -277,7 +277,7 @@ class FrontendController extends Controller
             'message' => 'required|string|max:1000',
             'roomId' => 'nullable|integer',
         ]);
-        
+
         if (auth()->user()->role == 'user') {
             $roomExists = Room::where('buyer_id', auth()->user()->id)->exists();
             if (!$roomExists) {
