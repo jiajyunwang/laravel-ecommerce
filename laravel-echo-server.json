@@ -3,12 +3,13 @@
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [],
 	"database": "redis",
-	"databaseConfig": {
-		"redis": {},
-		"sqlite": {
-			"databasePath": "/database/laravel-echo-server.sqlite"
-		}
-	},
+    "databaseConfig": {
+        "redis": {
+            "host": "hkg1.clusters.zeabur.com",
+            "port": 32438,
+            "password": "7Is1nbSKXR2yjk3uB5A469FZc8rhHCo0"
+        }
+    },
 	"devMode": true,
 	"host": null,
 	"port": "6001",
