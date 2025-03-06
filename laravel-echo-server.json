@@ -6,8 +6,8 @@
     "databaseConfig": {
         "redis": {
             "host": "hkg1.clusters.zeabur.com",
-            "port": 32438,
-            "password": "7Is1nbSKXR2yjk3uB5A469FZc8rhHCo0"
+            "port": 32132,
+            "password": "xD463lmhRsF2pyaBYqvd80E7Q9G5rV1n"
         }
     },
 	"devMode": true,
