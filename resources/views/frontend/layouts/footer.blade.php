@@ -1,4 +1,4 @@
-<script src="{{asset('build/assets/app-BPhBxfOi.js')}}"></script>
+@vite('resources/js/app.js')
 <script src="{{asset('frontend/js/jquery-3.7.1.min.js')}}"></script>
 <script src="{{asset('frontend/js/demo.js')}}"></script>
 <script src="{{asset('frontend/js/cart.js')}}"></script>
