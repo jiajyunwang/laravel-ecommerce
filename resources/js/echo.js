@@ -18,6 +18,5 @@ import io from 'socket.io-client';
 window.io = io;
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: 'laravel-ecommerce-oves.zeabur.internal' + ':800',
-    protocol: "http",
+    host: 'http://laravel-ecommerce-oves.zeabur.internal' + ':8080',
 });
