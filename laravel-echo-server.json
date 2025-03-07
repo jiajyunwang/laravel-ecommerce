@@ -11,7 +11,7 @@
         }
     },
 	"devMode": true,
-	"host": "laravel-ecommerce-oves.zeabur.internal",
+	"host": "0.0.0.0",
 	"port": "8080",
 	"protocol": "http",
 	"socketio": {},
