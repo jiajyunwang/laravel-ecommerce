@@ -13,7 +13,7 @@
 	"devMode": true,
 	"host": "laravel-ecommerce-oves.zeabur.internal",
 	"port": "8080",
-	"protocol": "https",
+	"protocol": "http",
 	"socketio": {},
 	"secureOptions": 67108864,
 	"sslCertPath": "",
