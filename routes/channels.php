@@ -14,3 +14,7 @@ Broadcast::channel('user.{userId}', function ($user, $userId) {
         return false;
     }
 });
+
+Broadcast::channel('errors', function ($user) {
+    return true;
+});
