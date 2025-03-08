@@ -18,5 +18,5 @@ import io from 'socket.io-client';
 window.io = io;
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: 'laravel-echo-server.zeabur.app'
+    host: window.location.hostname + ':6001'
 });
