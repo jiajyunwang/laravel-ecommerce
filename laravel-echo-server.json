@@ -1,5 +1,5 @@
 {
-	"authHost": "http://laravel-echo-server.zeabur.app",
+	"authHost": "https://laravel-echo-server.zeabur.app",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [],
 	"database": "redis",
