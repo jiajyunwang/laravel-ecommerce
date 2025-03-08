@@ -15,6 +15,3 @@ Broadcast::channel('user.{userId}', function ($user, $userId) {
     }
 });
 
-Broadcast::channel('errors', function ($user) {
-    return true;
-});
