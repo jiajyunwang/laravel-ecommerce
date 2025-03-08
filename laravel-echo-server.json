@@ -1,5 +1,5 @@
 {
-	"authHost": "https://laravel-ecommerce.zeabur.app:8080",
+	"authHost": "https://laravel-ecommerce.zeabur.app",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [],
 	"database": "redis",
@@ -11,7 +11,7 @@
         }
     },
 	"devMode": true,
-	"host": "localhost",
+	"host": null,
 	"port": "8080",
 	"protocol": "http",
 	"socketio": {},
