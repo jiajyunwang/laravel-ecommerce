@@ -13,5 +13,5 @@ Broadcast::channel('user.{userId}', function ($user, $userId) {
         }
         return false;
     }
-});
+}, ['guards' => ['api']]);
 
