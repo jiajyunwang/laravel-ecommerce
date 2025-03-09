@@ -18,5 +18,10 @@ import io from 'socket.io-client';
 window.io = io;
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: window.location.hostname + ':6001'
+    host: 'laravel-echo-server.zeabur.app',
+    auth: {
+        headers: {
+            Authorization: 'Bearer ' + 'Hqixxp3wGo7R7VQqMev0GXapLbUzcjiiKGnubwzd3b57769a'
+        },
+    },
 });
