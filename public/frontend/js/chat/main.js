@@ -20,11 +20,11 @@ let isListen = null;
 
 if ($('meta[name="access-token"]') !== null){
     const accessToken = $('meta[name="access-token"]').attr('content');
-    sessionStorage.setItem("accessToken", accessToken);
     Object.assign(window.Echo.options, {
         auth: {
             headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem("accessToken"),
+                Authorization: 'Bearer ' + accessToken,
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
         },
     });
