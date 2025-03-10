@@ -22,7 +22,6 @@ window.Echo = new Echo({
     host: 'laravel-echo-server.zeabur.app',
     auth: {
         headers: {
-
         },
     },
 });
