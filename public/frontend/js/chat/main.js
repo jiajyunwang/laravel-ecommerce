@@ -20,14 +20,14 @@ let isListen = null;
 
 if ($('meta[name="access-token"]') !== null){
     const accessToken = $('meta[name="access-token"]').attr('content');
-    Object.assign(window.Echo.options, {
-        auth: {
-            headers: {
-                Authorization: 'Bearer ' + accessToken,
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-        },
-    });
+    // Object.assign(window.Echo.options, {
+    //     auth: {
+    //         headers: {
+    //             Authorization: 'Bearer ' + accessToken,
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //     },
+    // });
 }
 
 closeChat.addEventListener("click", () => {
