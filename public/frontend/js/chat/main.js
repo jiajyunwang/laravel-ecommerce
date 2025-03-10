@@ -24,7 +24,6 @@ if ($('meta[name="access-token"]') !== null){
         auth: {
             headers: {
                 Authorization: 'Bearer ' + accessToken,
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
         },
     });

@@ -113,7 +113,7 @@ class FrontendController extends Controller
 
     public function tokenCreate(){
         $user = Auth::user();
-        //$user->tokens()->delete();
+        $user->tokens()->delete();
         $token = $user->createToken($user['nickname'])->plainTextToken;
         $cleanToken = explode('|', $token)[1] ?? $token;
         return $cleanToken;
