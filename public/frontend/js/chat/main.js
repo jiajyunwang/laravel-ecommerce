@@ -23,7 +23,6 @@ if ($('meta[name="access-token"]') !== null){
     Object.assign(window.Echo.options, {
         auth: {
             headers: {
-                // Authorization: 'Bearer ' + accessToken,
                 Authorization: 'Bearer ' + accessToken,
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

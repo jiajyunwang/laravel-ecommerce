@@ -20,9 +20,4 @@ window.io = io;
 window.Echo = new Echo({
     broadcaster: 'socket.io',
     host: 'laravel-echo-server.zeabur.app',
-    auth: {
-        headers: {
-            Authorization: 'Bearer ' + '7HkxPdIqmHfkYCih3VxfIibtrvQ13DDJS6AQsjKv2286aa06',
-        },
-    },
 });
