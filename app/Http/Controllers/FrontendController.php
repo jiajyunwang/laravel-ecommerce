@@ -76,7 +76,7 @@ class FrontendController extends Controller
         else{
             request()->session()->flash('error','Please try again!');
             return back();
-        }
+        }       
     }
 
     public function create(array $data){
@@ -100,13 +100,23 @@ class FrontendController extends Controller
         ]);
         $data= $request->all();
         if(Auth::attempt(['email' => $data['email'], 'password' => $data['password'], 'status'=>'active'])){
-            Session::put('user',$data['email']);
+            Session::put('user', $data['email']);
+            $token = $this->tokenCreate();
+            Session::put('token', $token);
             return redirect()->route('home');
         }
         else{
             request()->session()->flash('error','電子郵件和密碼無效，請重試！');
             return redirect()->back();
         }
+    }
+
+    public function tokenCreate(){
+        $user = Auth::user();
+        $user->tokens()->delete();
+        $token = $user->createToken($user['nickname'])->plainTextToken;
+        $cleanToken = explode('|', $token)[1] ?? $token;
+        return $cleanToken;
     }
 
     public function logout(){
@@ -337,26 +347,26 @@ class FrontendController extends Controller
         }
     }
 
-    public function TokenCreate(Request $request){
-        $this->validate($request,[
-            'email'=>'required|email',
-            'password'=>'required|min:6',
-            'tokenName'=>'required|string',
-        ]);
-        $data=$request->all();
-        if (Auth::guard('web')->attempt([
-            'email' => $data['email'], 
-            'password' => $data['password'], 
-            'status'=>'active'
-        ])) {
-            $user = User::where('email', $data['email'])->first();
-            $token = $user->createToken($data['tokenName']);
+    // public function TokenCreate(Request $request){
+    //     $this->validate($request,[
+    //         'email'=>'required|email',
+    //         'password'=>'required|min:6',
+    //         'tokenName'=>'required|string',
+    //     ]);
+    //     $data=$request->all();
+    //     if (Auth::guard('web')->attempt([
+    //         'email' => $data['email'], 
+    //         'password' => $data['password'], 
+    //         'status'=>'active'
+    //     ])) {
+    //         $user = User::where('email', $data['email'])->first();
+    //         $token = $user->createToken($data['tokenName']);
  
-            return ['token' => $token->plainTextToken];
-        } else {
-            return redirect()->back();
-        }
-    }
+    //         return ['token' => $token->plainTextToken];
+    //     } else {
+    //         return redirect()->back();
+    //     }
+    // }
 
     public function fetchUnreadCount()
     {

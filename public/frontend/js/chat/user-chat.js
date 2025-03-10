@@ -11,3 +11,4 @@ main.chatIcon.addEventListener("click", () => {
 });
 
 main.fetchUnreadCount();
+

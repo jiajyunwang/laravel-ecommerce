@@ -18,6 +18,18 @@ let unreadTotalCount = 0;
 let isOpenChat = false;
 let isListen = null;
 
+if ($('meta[name="access-token"]') !== null){
+    const accessToken = $('meta[name="access-token"]').attr('content');
+    sessionStorage.setItem("accessToken", accessToken);
+    Object.assign(window.Echo.options, {
+        auth: {
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem("accessToken"),
+            },
+        },
+    });
+}
+
 closeChat.addEventListener("click", () => {
     chatBox.style.display = "none";
     chatIcon.style.display = "flex";

@@ -136,5 +136,3 @@ $(function(){
         document.form.submit();
     });
 });
-
-
