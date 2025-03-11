@@ -44,7 +44,7 @@ class ProductController extends Controller
             $image->pad($height, $height, 'fff');
         }
         $imageName = date('ymdis').'.jpg';
-        $image->save('storage/images/'.$imageName);
+        $image->save(public_path('storage/images/' . $imageName));
         $path = 'storage/images/'.$imageName;
         $data['photo'] = $path;
         $data['status'] = 'active';
