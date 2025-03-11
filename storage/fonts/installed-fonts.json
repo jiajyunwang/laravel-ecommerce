@@ -6,9 +6,9 @@
         "bold_italic": "C:\\ecommerce\\vendor\\dompdf\\dompdf\/lib\/fonts\/NotoSansTC-Regular"
     },
     "notosanstc": {
-        "normal": "storage\/fonts\/NotoSansTC-Regular",
-        "bold": "storage\/fonts\/NotoSansTC-Regular",
-        "italic": "storage\/fonts\/NotoSansTC-Regular",
-        "bold_italic": "storage\/fonts\/NotoSansTC-Regular"
+        "normal": "NotoSansTC-Regular",
+        "bold": "NotoSansTC-Regular",
+        "italic": "NotoSansTC-Regular",
+        "bold_italic": "NotoSansTC-Regular"
     }
 }
