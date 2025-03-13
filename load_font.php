@@ -6,7 +6,7 @@ require_once "vendor/autoload.php";
 //    By default dompdf loads fonts to dompdf/lib/fonts
 //    If you have modified your font directory set this
 //    variable appropriately.
-$fontDir = "storage/fonts";
+//$fontDir = "lib/fonts";
 
 
 // *** DO NOT MODIFY BELOW THIS POINT ***
@@ -130,6 +130,7 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
   foreach ($fonts as $var => $src) {
     if ( is_null($src) ) {
       $entry[$var] = $dompdf->getOptions()->get('fontDir') . '/' . mb_substr(basename($normal), 0, -4);
+      $entry[$var] = mb_substr(basename($normal), 0, -4);
       continue;
     }
 
@@ -156,10 +157,20 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
     $font_obj->close();
 
     $entry[$var] = $entry_name;
+    $entry[$var] = basename($src);
   }
 
   // Store the fonts in the lookup table
   $fontMetrics->setFontFamily($fontname, $entry);
+
+  
+  $userFonts = [];
+  $userFontsFilePath = $dompdf->getOptions()->get('fontDir') . '/' . "installed-fonts.dist.json";
+  if (is_readable($userFontsFilePath)) {
+      $userFonts = json_decode(file_get_contents($userFontsFilePath), true);
+  }
+  $userFonts[mb_strtolower($fontname)] = $entry;
+  file_put_contents($userFontsFilePath, json_encode($userFonts, JSON_PRETTY_PRINT ));
 
   // Save the changes
   $fontMetrics->saveFontFamilies();
