@@ -5,7 +5,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "8.2.27",
+        "php": "8.2.28",
         "ext-imagick": "*",
         "ext-pdo_mysql": "*",
         "babenkoivan/elastic-scout-driver": "^4.0",
