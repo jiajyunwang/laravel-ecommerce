@@ -10,7 +10,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
           <link rel="stylesheet" href="{{ public_path('backend/css/bootstrap.min.css') }}">
           <link rel="stylesheet" href="bootstrap.min.css">
-          <link rel="stylesheet" href="{{ public_path('backend/css/bootstrap.min.css') }}">-->
+          <link rel="stylesheet" href="{{ public_path('backend/css/bootstrap.min.css') }}"> -->
     <title>Invoice Nr: </title>
     <style>
         body {
