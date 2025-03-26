@@ -42,12 +42,12 @@ class FrontendController extends Controller
     public function index(){
         $products = Product::where('status', 'active')->paginate(30);
         foreach ($products as $product) {
-            $reviewCount = count(ProductReview::with('users')->Where('product_id', $product['id'])->get());
-            $average = round(ProductReview::Where('product_id', $product['id'])->avg('rate'), 1);
+            $reviewCount = count(ProductReview::with('users')->Where('product_id', $product->id)->get());
+            $average = round(ProductReview::Where('product_id', $product->id)->avg('rate'), 1);
             $percentage = $average/5*100;
-            $product['reviewCount'] = $reviewCount;
-            $product['average'] = $average;
-            $product['percentage'] = $percentage;
+            $product->reviewCount = $reviewCount;
+            $product->average = $average;
+            $product->percentage = $percentage;
         }
         
         return view('frontend.index')
@@ -114,7 +114,7 @@ class FrontendController extends Controller
     public function tokenCreate(){
         $user = Auth::user();
         $user->tokens()->delete();
-        $token = $user->createToken($user['nickname'])->plainTextToken;
+        $token = $user->createToken($user->nickname)->plainTextToken;
         $cleanToken = explode('|', $token)[1] ?? $token;
         return $cleanToken;
     }
@@ -146,17 +146,17 @@ class FrontendController extends Controller
 
     public function productDetail($slug){
         $product = Product::where('id', $slug)->where('status', 'active')->first();
-        $reviewCount = count(ProductReview::with('users')->Where('product_id', $product['id'])->get());
-        $average = round(ProductReview::Where('product_id', $product['id'])->avg('rate'), 1);
+        $reviewCount = count(ProductReview::with('users')->Where('product_id', $product->id)->get());
+        $average = round(ProductReview::Where('product_id', $product->id)->avg('rate'), 1);
         $percentage = $average/5*100;
         $homeDeliveryFee = config('shipping.home_delivery');
 
         $reviews = ProductReview::with('users')
-            ->Where('product_id', $product['id'])
+            ->Where('product_id', $product->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
         foreach($reviews as $review){
-            $review['percentage'] = ($review->rate)/5*100;
+            $review->percentage = ($review->rate)/5*100;
         }
 
         return view('frontend.pages.product_detail')
@@ -179,7 +179,7 @@ class FrontendController extends Controller
             ->orderBy($sortBy, $sortOrder)
             ->paginate(10);
         foreach($reviews as $review){
-            $review['percentage'] = ($review->rate)/5*100;
+            $review->percentage = ($review->rate)/5*100;
         }
 
         return response()->json($reviews);
@@ -197,12 +197,12 @@ class FrontendController extends Controller
         if($request->requestAction=="checkout") {
             $products = [];
             $product = Product::where('id', $slug)->first();
-            $product['quantity'] = $request->quantity;
-            $product['amount'] = $product['quantity'] * $product->price;
+            $product->quantity = $request->quantity;
+            $product->amount = $product->quantity * $product->price;
             array_push($products, $product); 
-            $subTotal = $product['amount'];
+            $subTotal = $product->amount;
             $fromCart = 0;
-            $product['product_id'] = $product->id;
+            $product->product_id = $product->id;
             $homeDeliveryFee = config('shipping.home_delivery');
 
             return view('frontend.pages.checkout')
@@ -346,27 +346,6 @@ class FrontendController extends Controller
             return response()->json($message);
         }
     }
-
-    // public function TokenCreate(Request $request){
-    //     $this->validate($request,[
-    //         'email'=>'required|email',
-    //         'password'=>'required|min:6',
-    //         'tokenName'=>'required|string',
-    //     ]);
-    //     $data=$request->all();
-    //     if (Auth::guard('web')->attempt([
-    //         'email' => $data['email'], 
-    //         'password' => $data['password'], 
-    //         'status'=>'active'
-    //     ])) {
-    //         $user = User::where('email', $data['email'])->first();
-    //         $token = $user->createToken($data['tokenName']);
- 
-    //         return ['token' => $token->plainTextToken];
-    //     } else {
-    //         return redirect()->back();
-    //     }
-    // }
 
     public function fetchUnreadCount()
     {

@@ -1,14 +1,14 @@
 $(function(){
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
     /*====================================
     Account Popup
     ======================================*/
     $('#accountForm').on('submit', function(event) {
         event.preventDefault(); 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
         $.ajax({
             url: $(this).attr('action'),
             method: $(this).attr('method'),
@@ -39,11 +39,6 @@ $(function(){
         $('#sold-out').hide();
         $('#upper-limit').hide(); 
         event.preventDefault(); 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
         $.ajax({
             url: $('#myForm').attr('action'),
             method: $('#myForm').attr('method'),
@@ -73,7 +68,7 @@ $(function(){
     /*====================================
     Prevent Duplicate Submissions
     ======================================*/
-    $("#checkout").off().one("click", function(){
+    $("#checkout").one("click", function(){
         $("#form-checkout").submit();
     });
 

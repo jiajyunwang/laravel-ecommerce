@@ -60,7 +60,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'admin']], function
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
     Route::post('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
-    Route::post('/product/update', [ProductController::class, 'update'])->name('product.update');
+    Route::post('/product/{id}/update', [ProductController::class, 'update'])->name('product.update');
     Route::post('/product/to-inactive/{id}', [ProductController::class, 'toInactive'])->name('to-inactive');
     Route::post('/product/to-active/{id}', [ProductController::class, 'toActive'])->name('to-active');
     Route::post('/product/destroy/{id}', [ProductController::class, 'destroy'])->name('product.destroy');

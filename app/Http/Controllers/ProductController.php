@@ -111,7 +111,7 @@ class ProductController extends Controller
         $product = Product::where('status', 'active')
             ->where('id', $id)
             ->first();
-        $product['status'] = 'inactive';
+        $product->status = 'inactive';
         $product->save();
 
         $carts = Cart::where('product_id', $id)->get();
@@ -127,7 +127,7 @@ class ProductController extends Controller
         $product = Product::where('status', 'inactive')
             ->where('id', $id)
             ->first();
-        $product['status'] = 'active';
+        $product->status = 'active';
         $product->save();
 
         return redirect()->route('admin', ['type' => 'unlisted']);

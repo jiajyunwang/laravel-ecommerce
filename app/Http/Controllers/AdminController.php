@@ -87,7 +87,7 @@ class AdminController extends Controller
         $order = Order::with('order_details')
             ->where('id', $id)
             ->first();
-        $type = $order['status'];
+        $type = $order->status;
         $data = [
             'order' => $order,
             'type' => $type,
@@ -109,12 +109,12 @@ class AdminController extends Controller
             ->where('status', 'unhandled')
             ->where('id', $id)
             ->first();
-        $order['status'] = 'cancel';
+        $order->status = 'cancel';
         $order->save();
-        foreach ($order['order_details'] as $orderDetail) {
+        foreach ($order->order_details as $orderDetail) {
             $product = Product::where('id', $orderDetail->slug)->first();
             if ( $product) {
-                $product['stock'] += $orderDetail['quantity'];
+                $product->stock += $orderDetail->quantity;
                 $product->save();
             }
         }
@@ -126,7 +126,7 @@ class AdminController extends Controller
         $order = Order::where('status', 'unhandled')
             ->where('id', $id)
             ->first();
-        $order['status'] = 'shipping';
+        $order->status = 'shipping';
         $order->save();
         return redirect()->route('admin', ['type' => 'unhandled']);
     }
@@ -145,7 +145,7 @@ class AdminController extends Controller
             ->orderBy('updated_at', 'desc')
             ->get()
             ->map(function ($room) use ($unreadMessages) {
-                $unreadCount = $unreadMessages->get($room->id, 0); // 取得未讀數
+                $unreadCount = $unreadMessages->get($room->id, 0); 
                 return [
                     'roomId' => $room->id,
                     'userId' => $room->buyer_id,

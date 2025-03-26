@@ -59,7 +59,7 @@ class OrderController extends Controller
 
     public function orderDetail($id){
         $order = $this->order->userFind($id);
-        $type = $order['status'];
+        $type = $order->status;
 
         return view('frontend.order.order_detail')
                 ->with('order', $order)
@@ -78,10 +78,10 @@ class OrderController extends Controller
     {
         $status = ['status' => 'cancel'];
         $order = $this->order->userUpdateStatus($id, $status);
-        foreach ($order['order_details'] as $orderDetail) {
+        foreach ($order->order_details as $orderDetail) {
             $product = Product::where('id', $orderDetail->slug)->first();
             if ( $product) {
-                $product['stock'] += $orderDetail['quantity'];
+                $product->stock += $orderDetail->quantity;
                 $product->save();
             }
         }
@@ -97,8 +97,8 @@ class OrderController extends Controller
             $cart = Cart::with('product')->findOrFail($id);
             array_push($carts, $cart); 
             $subTotal += $cart->amount;
-            $cart['title'] = $cart->product['title'];
-            $cart['price'] = $cart->product['price'];
+            $cart->title = $cart->product->title;
+            $cart->price = $cart->product->price;
         }
         $fromCart = 1;
         $homeDeliveryFee = config('shipping.home_delivery');
@@ -138,9 +138,9 @@ class OrderController extends Controller
             $orderDetail = new orderDetail;
             $orderDetail->order_number = $order->order_number;
             $product = Product::findOrFail($id);
-            $orderDetail->slug = $product['id'];
-            $orderDetail->title = $product['title'];
-            $orderDetail->price = $product['price'];
+            $orderDetail->slug = $product->id;
+            $orderDetail->title = $product->title;
+            $orderDetail->price = $product->price;
             $orderDetail->quantity = $data['quantity'][$index];
             $index += 1;
             $orderDetail->amount = ($orderDetail->price)*($orderDetail->quantity);
@@ -155,7 +155,7 @@ class OrderController extends Controller
     {
         $order = $this->order->userFind($id);
 
-        foreach ($order['order_details'] as $item) {
+        foreach ($order->order_details as $item) {
             $productExists = Product::where('id', $item->slug)
                 ->where('status', 'active')
                 ->exists();
@@ -196,12 +196,12 @@ class OrderController extends Controller
         $order = $this->order->userFind($data['order_id']);
 
         $count = 0;
-        foreach($order['order_details'] as $order_detail){
-            $productId = Product::where('id', $order_detail['slug'])
+        foreach($order->order_details as $order_detail){
+            $productId = Product::where('id', $order_detail->slug)
                 ->select('id')
                 ->first();
             $review = ProductReview::create([
-                'user_id'=>$order['user_id'],
+                'user_id'=>$order->user_id,
                 'product_id'=>$productId->id,
                 'rate'=>$data['rate'][$count],
                 'review'=>$data['review'][$count],

@@ -1,4 +1,21 @@
 $(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "/cart-update",
+        method: "post",
+        dataType: "json",
+        data: {
+            product_id: fieldName,
+            quantity: currentVal,
+            amount: amountVal
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            alert('提交失敗，請重試。');
+        }
+    });
+
     $('.table-cart .qtyplus').click(function(e) {
         e.preventDefault();
         fieldName = $(this).attr('field');
@@ -17,24 +34,7 @@ $(function() {
             currentVal = stock;
             amountVal = stock*price;
         }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: "/cart-update",
-            method: "post",
-            data: {
-                product_id: fieldName,
-                quantity: currentVal,
-                amount: amountVal
-            },
-            dataType: "json",
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert('提交失敗，請重試。');
-            }
-        });
+        $.ajax();
     });
     $(".table-cart .qtyminus").click(function(e) {
         e.preventDefault();
@@ -54,24 +54,7 @@ $(function() {
             currentVal = 1;
             amountVal = 1*price;
         }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: "/cart-update",
-            method: "post",
-            data: {
-                product_id: fieldName,
-                quantity: currentVal,
-                amount: amountVal
-            },
-            dataType: "json",
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert('提交失敗，請重試。');
-            }
-        });
+        $.ajax();
     });
     $(".table-cart .qty").blur(function() {
         fieldName = $(this).attr('field');
@@ -102,23 +85,6 @@ $(function() {
             currentVal = 1;
             amountVal = 1*price;
         }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: "/cart-update",
-            method: "post",
-            data: {
-                product_id: fieldName,
-                quantity: currentVal,
-                amount: amountVal
-            },
-            dataType: "json",
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert('提交失敗，請重試。');
-            }
-        });
+        $.ajax();
     });
 });
