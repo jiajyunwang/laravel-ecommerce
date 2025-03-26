@@ -2,7 +2,6 @@
 <html lang="zh-Hant-TW">
 <head>
     <meta name="csrf-token" content="{{csrf_token()}}">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @if (session('token')!== null)
         <meta name="access-token" content="{{session('token')}}">
 	@endif
