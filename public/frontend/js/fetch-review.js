@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function loadMoreReviews(entries) {
-        console.log(entries);
         if (entries[0].isIntersecting) {
             loadingIndicator.textContent = '';
             loadingIndicator.classList.add("loader");

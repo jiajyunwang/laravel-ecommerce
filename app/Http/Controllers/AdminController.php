@@ -92,14 +92,8 @@ class AdminController extends Controller
             'order' => $order,
             'type' => $type,
         ];
-        $pdf = Pdf::loadView('backend.order.invoice', $data)
-            ->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isPhpEnabled' => true
-            ]);
-        $pdf->getOptions()->set('isHtml5ParserEnabled', true);
-        $pdf->getOptions()->set('defaultFont', 'NotoSansTC-Regular');
-        
+        $pdf = Pdf::loadView('backend.order.invoice', $data);
+
         return $pdf->stream();
     }
 

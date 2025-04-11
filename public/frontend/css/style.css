@@ -1065,7 +1065,6 @@ button {
     align-items: center;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #chat-box {
@@ -1079,7 +1078,6 @@ button {
     position: fixed;
     bottom: 5px;
     right: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #admin-chat-box {
@@ -1093,7 +1091,6 @@ button {
     position: fixed;
     bottom: 5px;
     right: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #chat-header {
@@ -1172,7 +1169,7 @@ button {
 }
 
 .message.local {
-	display: inline-block; /* 讓訊息框的寬度自適應內容 */
+	display: inline-block; 
 	max-width: 150px;
     background-color: #6beb96;
     color: rgb(0, 0, 0);
@@ -1180,7 +1177,7 @@ button {
 	overflow-wrap: break-word;
 }
 .message.remote {
-	display: inline-block; /* 讓訊息框的寬度自適應內容 */
+	display: inline-block; 
 	max-width: 150px;
     background-color: #ffffff;
     color: rgb(0, 0, 0);

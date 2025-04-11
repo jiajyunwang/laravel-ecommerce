@@ -100,6 +100,7 @@ class FrontendController extends Controller
         ]);
         $data= $request->all();
         if(Auth::attempt(['email' => $data['email'], 'password' => $data['password'], 'status'=>'active'])){
+            $request->session()->regenerate();
             Session::put('user', $data['email']);
             $token = $this->tokenCreate();
             Session::put('token', $token);

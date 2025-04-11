@@ -50,18 +50,16 @@ $(function() {
                     }
                 });
             }
-            $(document).on('mouseover', '.btn-dark', function() {
-                $('.btn-dark').click(function(e) {
-                    const fieldName = $(this).attr('field');
-                    $(`.order-`+fieldName).hide();
-                    $(`.order-`+fieldName).find('textarea').val('');
-                    $('.btn-prohibit-' + fieldName).show();
-                    $('.btn-accent-' + fieldName).hide(); 
-                    for (let j = 0; j < stars.length; j++) {
-                        stars[j].classList.remove("full");
-                    }
-                    ratings = [];
-                });
+            $('.btn-dark').click(function(e) {
+                const fieldName = $(this).attr('field');
+                $(`.order-`+fieldName).hide();
+                $(`.order-`+fieldName).find('textarea').val('');
+                $('.btn-prohibit-' + fieldName).show();
+                $('.btn-accent-' + fieldName).hide(); 
+                for (let j = 0; j < stars.length; j++) {
+                    stars[j].classList.remove("full");
+                }
+                ratings = [];
             });
         });
 

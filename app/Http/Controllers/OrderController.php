@@ -205,7 +205,7 @@ class OrderController extends Controller
                 'product_id'=>$productId->id,
                 'rate'=>$data['rate'][$count],
                 'review'=>$data['review'][$count],
-                ]);
+            ]);
             $count++;
         }
         $order->isReview = true;
