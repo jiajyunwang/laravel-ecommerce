@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let page = 1;
     let sortBy = 'created_at';
     let sortOrder = 'desc';
-    const orderContainer = document.getElementById('order-container');
     const loading = document.getElementById('loading');
     const orderType = document.getElementById('order-container').dataset.type;
 
@@ -19,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     observer.observe(loading);
 
-    async function fetchOrders(page, sortBy, sortOrder, orderType) {
+    async function fetchOrders(page, orderType) {
         try {
             const response = await fetch(
                 `/user/orders/fetch?page=${page}&type=${orderType}`
@@ -37,20 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('order-container');
             container.insertAdjacentHTML('beforeend', html);
             
-            if (isElementInViewport(loading)) {
-                loadMoreOrders([{ isIntersecting: true }]); 
-            }
+            observer.disconnect(); 
+            observer.observe(loadingIndicator);
+
         } catch (error) {
             console.error('Error fetching orders:', error);
         }
-    }
-    function isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
     }
 });
