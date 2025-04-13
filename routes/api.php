@@ -7,4 +7,4 @@ Route::get('/test', function () {
     return response()->json(['status' => 'API is working']);
 });
 
-Route::post('/tokens/create', [FrontendController::class, 'TokenCreate']);
+Route::post('/tokens/create', [FrontendController::class, 'apiTokenCreate']);
