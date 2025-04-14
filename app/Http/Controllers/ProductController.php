@@ -112,8 +112,11 @@ class ProductController extends Controller
     }
 
     public function imageDelete($product){
-        $photo = str_replace('storage', 'public', $product->photo);
-        Storage::delete($photo);
+        $path = public_path($product->photo);
+
+        if (file_exists($path)) {
+            unlink($path);
+        }
     }
 
     public function toInactive($id)
