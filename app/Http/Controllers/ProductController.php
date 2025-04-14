@@ -31,7 +31,7 @@ class ProductController extends Controller
             'price'=>'required|numeric',
         ]);
         
-        $manager = new ImageManager(new Driver());
+        
         $data = $request->all();
         $input = $request->file('photo');
         $path = $this->imageStore($input);
@@ -44,6 +44,7 @@ class ProductController extends Controller
 
     public function imageStore($input)
     {
+        $manager = new ImageManager(new Driver());
         $image = $manager->read($input);
         $width = $image->width();
         $height = $image->height();
