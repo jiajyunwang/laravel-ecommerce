@@ -34,6 +34,16 @@ class ProductController extends Controller
         $manager = new ImageManager(new Driver());
         $data = $request->all();
         $input = $request->file('photo');
+        $path = $this->imageStore($input);
+        $data['photo'] = $path;
+        $data['status'] = 'active';
+        Product::create($data);
+
+        return redirect()->route('admin');
+    }
+
+    public function imageStore($input)
+    {
         $image = $manager->read($input);
         $width = $image->width();
         $height = $image->height();
@@ -46,11 +56,8 @@ class ProductController extends Controller
         $imageName = date('ymdis').'.jpg';
         $image->save('storage/images/'.$imageName);
         $path = 'storage/images/'.$imageName;
-        $data['photo'] = $path;
-        $data['status'] = 'active';
-        Product::create($data);
-
-        return redirect()->route('admin');
+        
+        return $path;
     }
 
     public function edit($id)
@@ -73,8 +80,10 @@ class ProductController extends Controller
         $product=Product::findOrFail($id);
         $data = $request->all();
         if (isset($data['photo'])){
-            $path = $request->file('photo')->store('public/images');
-            $data['photo'] = str_replace('public', 'storage', $path);
+            $this->imageDelete($product);
+            $input = $request->file('photo');
+            $path = $this->imageStore($input);
+            $data['photo'] = $path;
         }
         $product->fill($data)->save();
 
