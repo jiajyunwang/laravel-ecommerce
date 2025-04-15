@@ -6,11 +6,7 @@ $(function() {
         url: "/cart-update",
         method: "post",
         dataType: "json",
-        data: {
-            product_id: fieldName,
-            quantity: currentVal,
-            amount: amountVal
-        },
+
         error: function(jqXHR, textStatus, errorThrown) {
             alert('提交失敗，請重試。');
         }
@@ -18,12 +14,12 @@ $(function() {
 
     $('.table-cart .qtyplus').click(function(e) {
         e.preventDefault();
-        fieldName = $(this).attr('field');
-        var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+        let fieldName = $(this).attr('field');
+        let currentVal = parseInt($('input[name=' + fieldName + ']').val());
         var stock = $('input[name=' + fieldName + ']').data('stock');
         var quantityVal = $('input[name=' + fieldName + ']').data('quantity');
         var price = $('input[name=' + fieldName + ']').data('price');
-        var amountVal = quantityVal*price;
+        let amountVal = quantityVal*price;
         if (!isNaN(currentVal) && currentVal < stock) {
             $('input[name=' + fieldName + ']').val(++currentVal);
             $('#' + fieldName ).text('$' + (currentVal*price));
@@ -34,16 +30,22 @@ $(function() {
             currentVal = stock;
             amountVal = stock*price;
         }
-        $.ajax();
+        $.ajax({
+            data: {
+                product_id: fieldName,
+                quantity: currentVal,
+                amount: amountVal
+            },
+        });
     });
     $(".table-cart .qtyminus").click(function(e) {
         e.preventDefault();
-        fieldName = $(this).attr('field');
-        var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+        let fieldName = $(this).attr('field');
+        let currentVal = parseInt($('input[name=' + fieldName + ']').val());
         var stock = $('input[name=' + fieldName + ']').data('stock');
         var quantityVal = $('input[name=' + fieldName + ']').data('quantity');
         var price = $('input[name=' + fieldName + ']').data('price');
-        var amountVal = quantityVal*price;
+        let amountVal = quantityVal*price;
         if (!isNaN(currentVal) && currentVal > 1) {
             $('input[name=' + fieldName + ']').val(--currentVal);
             $('#' + fieldName ).text('$' + (currentVal*price));
@@ -54,15 +56,21 @@ $(function() {
             currentVal = 1;
             amountVal = 1*price;
         }
-        $.ajax();
+        $.ajax({
+            data: {
+                product_id: fieldName,
+                quantity: currentVal,
+                amount: amountVal
+            },
+        });
     });
     $(".table-cart .qty").blur(function() {
-        fieldName = $(this).attr('field');
-        var currentVal = parseInt($(this).val());
+        let fieldName = $(this).attr('field');
+        let currentVal = parseInt($(this).val());
         var stock = $('input[name=' + fieldName + ']').data('stock');
         var quantityVal = $('input[name=' + fieldName + ']').data('quantity');
         var price = $('input[name=' + fieldName + ']').data('price');
-        var amountVal = quantityVal*price;
+        let amountVal = quantityVal*price;
         if (!isNaN(currentVal) && currentVal > stock) {
             $('input[name=' + fieldName + ']').val(stock);
             $('#' + fieldName ).text('$' + (stock*price));
@@ -85,6 +93,12 @@ $(function() {
             currentVal = 1;
             amountVal = 1*price;
         }
-        $.ajax();
+        $.ajax({
+            data: {
+                product_id: fieldName,
+                quantity: currentVal,
+                amount: amountVal
+            },
+        });
     });
 });
