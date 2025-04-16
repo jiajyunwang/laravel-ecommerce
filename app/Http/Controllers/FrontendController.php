@@ -188,7 +188,7 @@ class FrontendController extends Controller
 
     public function requestAction(Request $request, $slug){
         if(!Auth::check()) {
-            return response()->json(['notLongin' => true, 'message' => '請登入']);
+            return redirect()->route('login.form');
         }
         
         $request->validate([
