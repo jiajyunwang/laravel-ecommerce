@@ -31,8 +31,15 @@
                             <tr>
                                 <td class="text-center nowrap">{{$order->order_number}}</td>
                                 <td class="text-center nowrap">{{$order->name}}</td>
-                                <td class="text-center nowrap">貨到付款</td>
+
+                                @if($order->payment_method === 'COD')
+                                    <td class="text-center nowrap">貨到付款</td>
+                                @elseif($order->payment_method === 'creditCard')
+                                    <td class="text-center nowrap">信用卡</td>
+                                @endif
+
                                 <td class="text-center nowrap">${{$order->total_amount}}</td>
+
                                 @if($type=='unhandled')
                                     <td class="text-center nowrap text-danger">待出貨</td>
                                 @elseif($type=='shipping')
@@ -42,6 +49,7 @@
                                 @elseif($type=='cancel')
                                     <td class="text-center nowrap">取消</td>
                                 @endif
+
                                 <td class="text-center">
                                     <a target="_blank" class="operation nowrap" href="{{route('admin.order.detail', [$order->id])}}">下載</a>
                                     @if($type=='unhandled')

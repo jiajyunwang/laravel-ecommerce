@@ -40,4 +40,6 @@ return [
             env('ELASTICSEARCH_HOST', 'http://localhost:9200'),
         ],
     ],
+
+    'stripe' => [ 'secret' => env('STRIPE_SECRET'), ],
 ];

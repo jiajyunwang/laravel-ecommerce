@@ -22,6 +22,7 @@
         "laravel/ui": "^4.5",
         "pdphilip/elasticsearch": "^4.5",
         "predis/predis": "^2.3",
+        "stripe/stripe-php": "^17.1",
         "symfony/psr-http-message-bridge": "^7.2"
     },
     "require-dev": {

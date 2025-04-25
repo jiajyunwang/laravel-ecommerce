@@ -13,6 +13,7 @@ use App\Models\ProductReview;
 use App\Services\OrderService;
 use Auth;
 use Carbon\Carbon;
+use Stripe;
 
 class OrderController extends Controller
 {
@@ -116,8 +117,21 @@ class OrderController extends Controller
             'name'=>'string|required',
             'cellphone'=>'string|digits:10|required',
             'address'=>'string|required',
+            'paymentMethod'=>'string|required'
         ]);
+
         $data = $request->all();
+
+        if ($request->paymentMethod === 'creditCard') {
+            unset($data['stripeToken']);
+            Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $charge= Stripe\Charge::create ([
+                "amount" => $request->totalAmount*100,
+                "currency" => "TWD",
+                "source" => $request->stripeToken,
+                "description" => "Stripe Test Card Payment"
+            ]);
+        }
 
         $ids = $data['product_id'];
         $index = 0;

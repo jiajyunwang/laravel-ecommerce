@@ -691,10 +691,10 @@ button {
 .grid-container {
 	display: grid;
 	grid-template-columns: 2fr 200px;
-	grid-template-rows: 100px 270px 130px 170px 100px;
+	grid-template-rows: 100px 270px auto 170px 100px;
 	margin: 0px 20px;
 }
-.grid-container label {
+.grid-container label:not(.card_box label) {
 	font-size: 20px;
 }
 .text-primary {
@@ -733,7 +733,7 @@ button {
 	border-top: 1px solid #000000;
 	border-bottom: 1px solid #000000;
 }
-.grid-container input {
+.grid-container input:not(.card_box input) {
 	height: 27px; 
 	width: 400px;
 }
@@ -764,6 +764,7 @@ button {
 }
 .grid-container .payments {
 	margin-top: 20px;
+	padding-bottom: 20px;
 	grid-column:1/3;
     grid-row:3;
 	border-bottom: 1px solid #000000;
@@ -1274,4 +1275,10 @@ button {
 	position: absolute;
     right: 0;
     top: 0;
+}
+.panel {
+	display: none;
+	border-top: 1px solid #a8a8a8;
+	padding-top: 20px;
+	margin-top: 30px;
 }

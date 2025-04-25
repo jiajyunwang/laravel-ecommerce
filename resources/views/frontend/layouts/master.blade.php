@@ -6,7 +6,9 @@
     @if (session('token')!== null)
         <meta name="access-token" content="{{session('token')}}">
 	@endif
-    @include('frontend.layouts.head')	
+    @include('frontend.layouts.head')
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
 </head>
 <body class="bg-primary">
 

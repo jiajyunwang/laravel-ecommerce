@@ -55,7 +55,11 @@
             </div>
             <div class="payments">
                 <label>付款方式:</label>
-                <p>貨到付款</p>
+                @if($order->payment_method === 'COD')
+                    <p>貨到付款</p>
+                @elseif($order->payment_method === 'creditCard')
+                    <p>信用卡</p>
+                @endif
             </div>
             <div class="total-amount">
                 <div>

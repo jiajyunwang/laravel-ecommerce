@@ -1,6 +1,6 @@
 @extends('frontend.layouts.master')
 @section('main-content')
-    <div class="title">
+<div class="title">
         <p>結帳</p>
     </div>
     <div class="content">
@@ -59,10 +59,41 @@
                 <div class="payments">
                     <label>付款方式</label>
                     <div class="nav-tabs">
-                        <button class="btn active" type="button">貨到付款</button>
-                        <!-- <button class="btn btn-prohibit" type="button">信用卡</button> -->
+                        <button id="COD" class="btn sort-button active" type="button">貨到付款</button>
+                        <button id="credit-card" class="btn sort-button" type="button">信用卡</button>
+                        <input type="hidden" id="paymentMethod" name="paymentMethod" value="COD">
                     </div>
-                    <input type="hidden" id="paymentMethod" name="paymentMethod" value="COD">
+                    <div class="panel">
+                        <label>付款詳情</label>
+                        <div class="card_box">
+                            <label for="cardholder-name">持卡人姓名</label>
+                            <input id="cardholder-name" class="card_input" type="text">
+
+                            <label for="cardholder-cellphone">持卡人手機</label>
+                            <input id="cardholder-cellphone" class="card_input" type="tel">
+
+                            <label for="card-number-element">卡號</label>
+                            <div id="card-number-element" class="card_input"></div>
+                            <input type='hidden' name='stripeToken' id='stripe-token-id'>
+
+                            <div class="card_row">
+                                <div>
+                                    <label for="card-expiry-element">到期日</label>
+                                    <div id="card-expiry-element" class="card_input"></div>
+                                </div>
+
+                                <div>
+                                    <label for="card-cvc-element">安全碼</label>
+                                    <div id="card-cvc-element" class="card_input"></div>
+                                </div>
+                        
+                                <div>
+                                    <label for="cardholder-zip">郵遞區號</label>
+                                    <input id="cardholder-zip" class="card_input" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="total-amount">
                     <div>
@@ -83,9 +114,93 @@
                 </div>
                 <div class="button">
                     <input type="hidden" name="fromCart" value="{{$fromCart}}">
-                    <button id="checkout" class="btn right btn-dark" type="button">結帳</button>
+                    <button id="checkout" class="btn right btn-dark" type="button" onclick="createToken()">結帳</button>
                 </div>
             </div>
         </form>
     </div>
 @endsection
+@push('scripts')
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const cash = document.getElementById("COD");
+        const creditCard = document.getElementById("credit-card");
+        var stripe = Stripe('{{ env('STRIPE_KEY') }}');
+        const elements = stripe.elements({
+            fonts: [
+                {
+                    cssSrc: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'
+                }
+            ]
+        })
+
+        const cardNumberElement = elements.create('cardNumber', {
+            style: {
+                base: {
+                    color: '#555',
+                    fontFamily: 'Montserrat, sans-serif'
+                }
+            }
+        })
+        cardNumberElement.mount('#card-number-element')
+
+        const cardExpiryElement = elements.create('cardExpiry', {
+            style: {
+                base: {
+                    color: '#555',
+                    fontFamily: 'Montserrat, sans-serif'
+                }
+            }
+        })
+        cardExpiryElement.mount('#card-expiry-element')
+
+        const cardCVCElement = elements.create('cardCvc', {
+            style: {
+                base: {
+                    color: '#555',
+                    fontFamily: 'Montserrat, sans-serif'
+                }
+            }
+        })
+        cardCVCElement.mount('#card-cvc-element')
+
+        cash.addEventListener('click', function () {
+            creditCard.classList.remove('active');
+            cash.classList.add('active');
+            if ($('.panel').is(':visible')) {
+                $('.panel').slideToggle('slow');
+            } 
+            $('#paymentMethod').val('COD');
+        });
+
+        creditCard.addEventListener('click', function () {
+            cash.classList.remove('active');
+            creditCard.classList.add('active');
+            if (!$('.panel').is(':visible')) {
+                $('.panel').slideToggle('slow');
+            } 
+            $('#paymentMethod').val('creditCard');
+        });
+
+        function createToken() {
+            var options = {
+                cardholder_name: document.getElementById('cardholder-name').value,
+                cardholder_cellphone: document.getElementById('cardholder-cellphone').value,
+                cardholder_zip: document.getElementById('cardholder-zip').value,
+            }
+
+            document.getElementById('checkout').disabled = true;
+            stripe.createToken(cardNumberElement, options).then(function(result) {
+                if(typeof result.error != 'undefined') {
+                    document.getElementById("checkout").disabled = false;
+                    alert(result.error.message);
+                }
+
+                if(typeof result.token != 'undefined') {
+                    document.getElementById("stripe-token-id").value = result.token.id;
+                    document.getElementById('form-checkout').submit();
+                }
+            });
+        }
+    </script>
+@endpush
