@@ -8,6 +8,8 @@
 <script src="{{asset('frontend/js/quantity.js')}}"></script>
 <script src="{{asset('frontend/js/repurchase.js')}}"></script>
 <script src="{{asset('frontend/js/review.js')}}"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{{asset('frontend/js/stripe.js')}}"></script>
 @auth
     @if (Auth::user()->role === 'user')
         <script type="module" src="{{asset('frontend/js/chat/user-chat.js')}}"></script>
