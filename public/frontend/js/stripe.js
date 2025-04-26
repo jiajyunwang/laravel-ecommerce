@@ -58,6 +58,13 @@ $(function() {
         $('#paymentMethod').val('creditCard');
     });
 
+    $("#checkout").one("click", function(){
+        if (('#paymentMethod').val('COD') === 'creditCard') {
+            createToken();
+        } 
+        $("#form-checkout").submit();
+    });
+
     function createToken() {
         var options = {
             cardholder_name: document.getElementById('cardholder-name').value,

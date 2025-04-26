@@ -66,13 +66,6 @@ $(function(){
     });
 
     /*====================================
-    Prevent Duplicate Submissions
-    ======================================*/
-    $("#checkout").one("click", function(){
-        $("#form-checkout").submit();
-    });
-
-    /*====================================
     Check All
     ======================================*/
     $(".checkAll").click(function(){
