@@ -114,7 +114,7 @@
                 </div>
                 <div class="button">
                     <input type="hidden" name="fromCart" value="{{$fromCart}}">
-                    <button id="checkout" class="btn right btn-dark" type="button" onclick="createToken()">結帳</button>
+                    <button id="checkout" class="btn right btn-dark" type="button">結帳</button>
                 </div>
             </div>
         </form>
