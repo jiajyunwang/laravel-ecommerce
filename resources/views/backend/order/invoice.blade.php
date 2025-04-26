@@ -141,23 +141,23 @@
         <table class="table mt-5">
             <tbody>
                 <tr>
-                    <th scope="row">Number</th>
+                    <th scope="row">訂單編號</th>
                     <td>{{$order->order_number}}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Invoice to</th>
+                    <th scope="row">買家</th>
                     <td>{{$order->name}}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Order Date</th>
+                    <th scope="row">訂單日期</th>
                     <td>{{$order->created_at->format('DdmY')}}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Address</th>
+                    <th scope="row">地址</th>
                     <td>{{$order->address}}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Phone</th>
+                    <th scope="row">手機</th>
                     <td>{{$order->phone}}</td>
                 </tr>
             </tbody>
@@ -165,10 +165,10 @@
         <table class="table table-striped mt-5">
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
+                    <th>商品</th>
+                    <th>數量</th>
+                    <th>單價</th>
+                    <th>金額</th>
                 </tr>
             </thead>
             <tbody>
@@ -184,7 +184,7 @@
             <tfoot>
                 <tr>
                     <th colspan="3" class="text-end">
-                        Sub Total
+                        商品總金額
                     </th>
                     <td>
                         ${{$order->sub_total}}
@@ -192,7 +192,7 @@
                 </tr>
                 <tr>
                     <th colspan="3" class="text-end">
-                        Shipping
+                        運費
                     </th>
                     <td>
                         ${{$order->shipping_fee}}
@@ -200,7 +200,7 @@
                 </tr>
                 <tr>
                     <th colspan="3" class="text-end">
-                        Total
+                        訂單金額
                     </th>
                     <td>
                         ${{$order->total_amount}}
