@@ -59,7 +59,7 @@ $(function() {
     });
 
     $("#checkout").one("click", function(){
-        if (('#paymentMethod').val('COD') === 'creditCard') {
+        if (('#paymentMethod').val() === 'creditCard') {
             createToken();
         } 
         $("#form-checkout").submit();
