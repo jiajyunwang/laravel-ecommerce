@@ -19,39 +19,73 @@ Password: useruser2
 ```
 Email: admin@example.com
 Password: admin123
+```
 
-## Laravel Sponsors
+## 網站功能
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 前台
 
-### Premium Partners
+* 全站<BR>
+⌞商品搜尋(Elasticsearch)<BR>
+⌞客服即時通訊(Redis + socket.io)<BR>
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+* 首頁<BR>
+⌞商品陳列<BR>
+⌞商品排序<BR>
 
-## Contributing
+* 商品<BR>
+⌞商品介紹<BR>
+⌞商品數量<BR>
+⌞直接購買<BR>
+⌞加入購物車<BR>
+⌞評價列表<BR>
+⌞評價排序<BR>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* 購物車<BR>
+⌞購物車商品列表<BR>
+⌞選取商品<BR>
+⌞移除商品<BR>
+⌞商品數量<BR>
 
-## Code of Conduct
+* 結帳<BR>
+⌞帳單<BR>
+⌞信用卡付款(Stripe API)<BR>
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+* 訂單<BR>
+⌞訂單列表<BR>
+⌞訂單操作(取消、完成、評價、重新購買)<BR>
 
-## Security Vulnerabilities
+* 用戶<BR>
+⌞註冊<BR>
+⌞登入<BR>
+⌞基本資料修改<BR>
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 後台
 
-## License
+* 後台<BR>
+⌞商品管理<BR>
+⌞訂單管理<BR>
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 使用技術
+
+1. PHP
+2. Laravel
+3. JS
+4. jQuery
+5. MySQL
+6. AJAX
+7. Fetch 
+8. Elasticsearch
+9. Laravel Broadcasting(Redis + socket.io)
+10. Stripe API
+11. Infinite Scroll
+12. Laravel Dompdf
+13. Intervention Image
+
+## 注意事項
+
+信用卡付款為測試模式，請使用以下測試用卡號
+
+| 卡號 | 月/年 | CVC  |
+| -------- | -------- | -------- |
+| 4242 4242 4242 4242 | any | any |
