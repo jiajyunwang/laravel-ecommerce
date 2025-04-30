@@ -20,6 +20,7 @@
         "laravel/scout": "^10.11",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "pdphilip/elasticsearch": "^4.5",
         "predis/predis": "^2.3",
         "stripe/stripe-php": "^17.1",

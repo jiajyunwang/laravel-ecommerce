@@ -34,8 +34,8 @@ class ProductController extends Controller
         
         $data = $request->all();
         $input = $request->file('photo');
-        $path = $this->imageStore($input);
-        $data['photo'] = $path;
+        $url = $this->imageStore($input);
+        $data['photo'] = $url;
         $data['status'] = 'active';
         Product::create($data);
 
@@ -54,11 +54,12 @@ class ProductController extends Controller
         else{
             $image->pad($height, $height, 'fff');
         }
+        $encoded = $image->encode();
         $imageName = date('ymdis').'.jpg';
-        $image->save('backend/storage/images/'.$imageName);
-        $path = 'backend/storage/images/'.$imageName;
-        
-        return $path;
+        Storage::disk('minio')->put($imageName, $encoded);
+        $url = Storage::disk('minio')->url($imageName);
+
+        return $url;
     }
 
     public function edit($id)
@@ -78,13 +79,13 @@ class ProductController extends Controller
             'price'=>'required|numeric',
         ]);
 
-        $product=Product::findOrFail($id);
+        $product = Product::findOrFail($id);
         $data = $request->all();
         if (isset($data['photo'])){
             $this->imageDelete($product);
             $input = $request->file('photo');
-            $path = $this->imageStore($input);
-            $data['photo'] = $path;
+            $url = $this->imageStore($input);
+            $data['photo'] = $url;
         }
         $product->fill($data)->save();
 
@@ -112,11 +113,8 @@ class ProductController extends Controller
     }
 
     public function imageDelete($product){
-        $path = public_path($product->photo);
-
-        if (file_exists($path)) {
-            unlink($path);
-        }
+        $imageName = basename($product->photo);
+        Storage::disk('minio')->delete($imageName);
     }
 
     public function toInactive($id)
