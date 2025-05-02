@@ -59,11 +59,15 @@ $(function() {
     });
 
     $("#checkout").one("click", function(){
+        formSubmit();
+    });
+
+    async function formSubmit() {
         if ($('#paymentMethod').val() === 'creditCard') {
-            createToken();
+            await createToken();
         } 
         $("#form-checkout").submit();
-    });
+    }
 
     function createToken() {
         var options = {
@@ -73,7 +77,7 @@ $(function() {
         }
 
         document.getElementById('checkout').disabled = true;
-        stripe.createToken(cardNumberElement, options).then(function(result) {
+        return stripe.createToken(cardNumberElement, options).then(function(result) {
             if(typeof result.error != 'undefined') {
                 document.getElementById("checkout").disabled = false;
                 alert(result.error.message);
