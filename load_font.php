@@ -157,7 +157,7 @@ function install_font_family($dompdf, $fontname, $normal, $bold = null, $italic 
     $font_obj->close();
 
     $entry[$var] = $entry_name;
-    $entry[$var] = basename($src);
+    $entry[$var] = mb_substr(basename($src), 0, -4);
   }
 
   // Store the fonts in the lookup table
