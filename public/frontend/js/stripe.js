@@ -81,7 +81,6 @@ $(function() {
 
             if(typeof result.token != 'undefined') {
                 document.getElementById("stripe-token-id").value = result.token.id;
-                document.getElementById('form-checkout').submit();
             }
         });
     }
