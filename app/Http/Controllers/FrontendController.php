@@ -124,7 +124,7 @@ class FrontendController extends Controller
         Session::forget('user');
         Auth::logout();
         request()->session()->flash('success','Logout successfully');
-        return back();
+        return redirect()->route('home');
     }
 
     public function account(){
