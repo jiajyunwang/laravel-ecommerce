@@ -40,18 +40,18 @@
             @if($type=='unhandled')
                 <form method="GET" action="{{route('to-cancel', $order->id)}}">
                     @csrf
-                    <button class="btn m-t-m m-r-m btn-dark">取消訂單</button>
+                    <button class="btn m-t-m m-r-s m-l-s btn-dark">取消訂單</button>
                 </form>
             @elseif($type=='shipping')
                 <form method="GET" action="{{route('to-completed', $order->id)}}">
                     @csrf
-                    <button class="btn m-t-m m-r-m btn-accent">完成訂單</button>
+                    <button class="btn m-t-m m-r-s m-l-s btn-accent">完成訂單</button>
                 </form>
             @elseif($type=='completed')
                 @if(!$order->isReview)
-                    <button class="btn m-t-m m-r-m btn-accent btn-review" data-order-id="{{$order->id}}">評價</button>
+                    <button class="btn m-t-m m-r-s m-l-s btn-accent btn-review" data-order-id="{{$order->id}}">評價</button>
                 @endif
-                <button id="again" class="btn m-t-m m-r-m btn-dark" data-order-id="{{$order->id}}">重新購買</button>
+                <button id="again" class="btn m-t-m m-r-s m-l-s btn-dark" data-order-id="{{$order->id}}">重新購買</button>
             @elseif($type=='cancel')
                 <button id="again" class="btn m-t-m btn-dark" data-order-id="{{$order->id}}">重新購買</button>
             @endif

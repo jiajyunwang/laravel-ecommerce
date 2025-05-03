@@ -889,6 +889,12 @@ button {
 	justify-content: center;    
 	flex-wrap: wrap;
 }
+.m-r-s {
+	margin-right: 10px;
+}
+.m-l-s {
+	margin-left: 10px;
+}
 .m-t-m {
 	margin-top: 20px;
 }

@@ -89,7 +89,7 @@
                 @elseif($type=='completed')
                     <button id="again" class="btn right btn-dark" data-order-id="{{$order->id}}">重新購買</button>
                     @if(!$order->isReview)
-                        <button class="btn right m-r-m btn-accent btn-review" data-order-id="{{$order->id}}">評價</button>
+                        <button class="btn right m-r-s m-l-s btn-accent btn-review" data-order-id="{{$order->id}}">評價</button>
                     @endif
                 @elseif($type=='cancel')
                     <button id="again" class="btn right btn-dark" data-order-id="{{$order->id}}">重新購買</button>
