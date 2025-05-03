@@ -68,12 +68,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const formattedDate = date.toISOString().split('T')[0];
         div.innerHTML = `
             <div class="review-inner m-b-m">
-                <p class="m-0">${review.users.name}</p>
+                <p class="m-0">${review.users.nickname}</p>
                 <div class="ratings">
                     <div class="empty-stars"></div>
                     <div class="full-stars" style="width:${review.percentage}%"></div>
                 </div>
-                <p class="m-b-l">${review.review}</p>
+                <p class="m-b-l">${review.review || ''}</p>
                 <p class="date">${formattedDate}</p>
             </div>
         `;
