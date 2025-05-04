@@ -86,11 +86,6 @@
                                     <label for="card-cvc-element">安全碼</label>
                                     <div id="card-cvc-element" class="card_input"></div>
                                 </div>
-                        
-                                <div>
-                                    <label for="cardholder-zip">郵遞區號</label>
-                                    <input id="cardholder-zip" class="card_input" type="text">
-                                </div>
                             </div>
                         </div>
                     </div>
