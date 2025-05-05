@@ -4,8 +4,7 @@
         <p>購物車</p>
     </div>
     <div class="content">
-        <form name="form" method="POST" action="">
-            @csrf
+        <form name="form" method="GET" action="">
             <div class="top check-all">
                 <input type="checkbox" class="checkAll" checked>
                 <label>全選</label>

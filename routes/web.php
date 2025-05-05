@@ -38,7 +38,7 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::post('/account', [FrontendController::class, 'accountSubmit'])->name('account.submit');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/cart-destroy/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::post('/destroy-carts', [CartController::class, 'destroyCarts'])->name('destroy.carts');
+    Route::get('/destroy-carts', [CartController::class, 'destroyCarts'])->name('destroy.carts');
     Route::post('/review', [OrderController::class, 'review'])->name('review');
     Route::get('/order', [OrderController::class, 'index'])->name('user.order');
     Route::get('/orders/fetch', [OrderController::class, 'fetchOrders'])->name('orders.fetch');
@@ -46,7 +46,7 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('/order/to-completed/{id}', [OrderController::class, 'toCompleted'])->name('to-completed');
     Route::get('/order/to-cancel/{id}', [OrderController::class, 'toCancel'])->name('to-cancel');
     Route::get('/order/{id}/repurchase', [OrderController::class, 'repurchase'])->name('order.repurchase');
-    Route::post('/order/create', [OrderController::class, 'create'])->name('order.create');
+    Route::get('/order/create', [OrderController::class, 'create'])->name('order.create');
     Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
     Route::get('/chat/messages', [FrontendController::class, 'fetchRoomMessages']);
     Route::post('/chat/send', [FrontendController::class, 'sendMessage']);

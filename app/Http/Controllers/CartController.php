@@ -35,7 +35,7 @@ class CartController extends Controller
     {
         $ids = $request->check;
         foreach($ids as $id){
-            Cart::findOrFail($id)->delete();
+            Cart::where('user_id', Auth::user()->id)->findOrFail($id)->delete();
         }
         return redirect()->route('cart');
     }

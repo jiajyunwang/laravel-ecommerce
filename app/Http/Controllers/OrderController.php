@@ -95,7 +95,9 @@ class OrderController extends Controller
         $ids = $request->check;
         $subTotal = 0;
         foreach($ids as $id){
-            $cart = Cart::with('product')->findOrFail($id);
+            $cart = Cart::where('user_id', Auth::user()->id)
+                ->with('product')
+                ->findOrFail($id);
             array_push($carts, $cart); 
             $subTotal += $cart->amount;
             $cart->title = $cart->product->title;
