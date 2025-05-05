@@ -466,4 +466,5 @@ button {
 }
 .card-body .product-title {
 	display: flex;
+	max-width: 500px;
 }
