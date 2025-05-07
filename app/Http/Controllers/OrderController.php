@@ -55,7 +55,7 @@ class OrderController extends Controller
     { 
         $type = $request->query('type');
         $page = $request->query('page');
-        $orders = $this->order->userPaginate($$type, $page);
+        $orders = $this->order->userPaginate($type, $page);
 
         return view('frontend.layouts.order', compact('orders', 'type'))->render();
     }
