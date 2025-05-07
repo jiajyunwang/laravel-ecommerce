@@ -8,13 +8,13 @@ use Auth;
 
 class OrderRepository
 {
-    public function userPaginate($type) 
+    public function userPaginate($type, $page) 
     {
         $orders =  Order::with('order_details')
             ->where('user_id', Auth::user()->id)
             ->where('status', $type)
             ->orderBy('created_at', 'desc')
-            ->paginate(5);
+            ->paginate(5, ['*'], 'page', $page);
 
         return $orders;
     }

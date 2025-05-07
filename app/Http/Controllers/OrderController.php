@@ -25,6 +25,7 @@ class OrderController extends Controller
 
     public function index(Request $request){
         $type = $request->query('type');
+        $page = $request->query('page');
         $unhandledCol = $shippingCol = $completedCol = $cancelCol = 'col';
         if ($type==null || $type=='unhandled'){
             $type = 'unhandled';
@@ -39,7 +40,7 @@ class OrderController extends Controller
         elseif ($type == 'cancel'){
             $cancelCol = 'border';
         }
-        $orders = $this->order->userPaginate($type);
+        $orders = $this->order->userPaginate($type, $page);
 
         return view('frontend.order.index')
                     ->with('unhandledCol', $unhandledCol)
@@ -53,7 +54,8 @@ class OrderController extends Controller
     public function fetchOrders(Request $request)
     { 
         $type = $request->query('type');
-        $orders = $this->order->userPaginate($type);
+        $page = $request->query('page');
+        $orders = $this->order->userPaginate($$type, $page);
 
         return view('frontend.layouts.order', compact('orders', 'type'))->render();
     }

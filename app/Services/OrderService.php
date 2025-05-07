@@ -15,9 +15,9 @@ class OrderService
         $this->order = $order;
     }
 
-    public function userPaginate($type) 
+    public function userPaginate($type, $page) 
     {
-        return $this->order->userPaginate($type);
+        return $this->order->userPaginate($type, $page);
     }
 
     public function userFind($id) 
