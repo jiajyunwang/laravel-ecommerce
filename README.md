@@ -80,7 +80,7 @@ Password: admin123
 10. Stripe API
 11. Infinite Scroll
 12. Laravel Dompdf
-13. Intervention 
+13. Intervention Image
 14. OSS(MinIO)
 
 ## 注意事項
