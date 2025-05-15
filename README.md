@@ -14,7 +14,7 @@ Email: user2@example.com
 Password: useruser2
 ```
 
-後台: https://laravel-ecommerce.zeabur.app/
+後台: https://laravel-ecommerce.zeabur.app/admin
 
 ```
 Email: admin@example.com
