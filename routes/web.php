@@ -26,7 +26,7 @@ Route::post('/user/register', [FrontendController::class, 'registerSubmit'])->na
 Route::get('product-detail/{slug}', [FrontendController::class, 'productDetail'])->name('product-detail');
 Route::get('/reviews/fetch', [FrontendController::class, 'fetchReviews'])->name('reviews.fetch');
 
-Route::post('/request-action/{slug}', [FrontendController::class, 'requestAction'])->name('request.action');
+Route::get('/request-action/{slug}', [FrontendController::class, 'requestAction'])->name('request.action');
 
 Route::post('/cart-update', [CartController::class, 'update'])->name('cart.update');
 
