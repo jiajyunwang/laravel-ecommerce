@@ -72,8 +72,7 @@ $(function() {
     function createToken() {
         var options = {
             cardholder_name: document.getElementById('cardholder-name').value,
-            cardholder_cellphone: document.getElementById('cardholder-cellphone').value,
-            cardholder_zip: document.getElementById('cardholder-zip').value,
+            cardholder_cellphone: document.getElementById('cardholder-cellphone').value
         }
 
         document.getElementById('checkout').disabled = true;

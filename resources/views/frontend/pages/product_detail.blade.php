@@ -28,8 +28,7 @@
                 <i class="ti-truck"></i><p>宅配${{$homeDeliveryFee}}</p>
             </div>
             <div class="stock">
-                <form method='POST' id="myForm" action="{{route('request.action', [$product->id])}}">
-                    @csrf
+                <form method='GET' id="myForm" action="{{route('request.action', [$product->id])}}">
                     <label>購買數量 </label>
                     <div class="form-group">
                         <div class="minus">
