@@ -19,7 +19,7 @@ import io from 'socket.io-client';
 window.io = io;
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: 'laravel-echo-server.zeabur.app',
+    host: 'Laravel-echo-server-env.eba-r9qrwrp8.us-east-1.elasticbeanstalk.com:6001',
     auth: {
         headers: {
         },

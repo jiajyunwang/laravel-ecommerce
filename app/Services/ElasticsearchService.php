@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Elastic\Elasticsearch\ClientBuilder;
+use OpenSearch\ClientBuilder;
+
 
 class ElasticsearchService
 {
@@ -12,8 +13,10 @@ class ElasticsearchService
     {
         $this->client = ClientBuilder::create()
             ->setHosts(config('services.elasticsearch.hosts'))
+            ->setBasicAuthentication('user', '$aA09183110721')
             ->build();
     }
+
     public function index($params)
     {
         return $this->client->index($params); 

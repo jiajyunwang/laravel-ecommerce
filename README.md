@@ -4,7 +4,7 @@
 
 ## Demo
 
-前台: https://laravel-ecommerce.zeabur.app/
+前台: http://laravel-env.eba-ipt2yque.us-east-1.elasticbeanstalk.com/
 ```
 Email: user1@example.com
 Password: useruser1
@@ -14,7 +14,7 @@ Email: user2@example.com
 Password: useruser2
 ```
 
-後台: https://laravel-ecommerce.zeabur.app/admin
+後台: http://laravel-env.eba-ipt2yque.us-east-1.elasticbeanstalk.com/admin
 
 ```
 Email: admin@example.com
@@ -76,10 +76,10 @@ Password: admin123
 6. AJAX
 7. Fetch 
 8. Elasticsearch
-9. Laravel Broadcasting(Redis + socket.io)
+9. PHPSocket.IO、Redis + socket.io
 10. Stripe API
 11. Infinite Scroll
-12. Laravel Dompdf
+12. wkhtmltopdf、Laravel Dompdf
 13. Intervention Image
 14. OSS(MinIO)
 

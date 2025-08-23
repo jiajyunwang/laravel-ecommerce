@@ -1,18 +1,14 @@
 {
-	"authHost": "https://laravel-ecommerce.zeabur.app",
+	"authHost": "http://localhost:8000//",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [],
 	"database": "redis",
     "databaseConfig": {
-        "redis": {
-            "host": "hkg1.clusters.zeabur.com",
-            "port": 32132,
-            "password": "xD463lmhRsF2pyaBYqvd80E7Q9G5rV1n"
-        }
+        "redis": {}
     },
 	"devMode": true,
 	"host": null,
-	"port": "8080",
+	"port": "6001",
 	"protocol": "http",
 	"socketio": {},
 	"secureOptions": 67108864,
