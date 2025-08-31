@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -140,10 +141,20 @@ class OrderController extends Controller
         $ids = $data['product_id'];
         $index = 0;
         foreach($ids as $id){
-            $product = Product::findOrFail($id);
-            $product->stock -= $data['quantity'][$index];
+            $qty = $data['quantity'][$index];
+            DB::transaction(function () use ($id, $qty) {
+                $affected = Product::where('id', $id)
+                    ->where('stock', '>=', $qty)
+                    ->decrement('stock', $qty);
+
+                if ($affected !== 1) {
+                    throw new \Exception('庫存不足');
+                }
+
+            });
+
             $index += 1;
-            $product->save();
+
             if($data['fromCart']){
                 Cart::where('user_id', Auth::user()->id)->where('product_id', $id)->delete();
             }
