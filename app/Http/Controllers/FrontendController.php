@@ -376,6 +376,35 @@ class FrontendController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    public function apiProducts(Request $request){
+        $products = Product::where('status', 'active')->paginate(30);
+        foreach ($products as $product) {
+            $reviewCount = count(ProductReview::with('users')->where('product_id', $product->id)->get());
+            $average = round(ProductReview::where('product_id', $product->id)->avg('rate'), 1);
+            $percentage = $average / 5 * 100;
+            $product->reviewCount = $reviewCount;
+            $product->average = $average;
+            $product->percentage = $percentage;
+            $product->photo = asset($product->photo);
+        }
+        return response()->json($products);
+    }
+
+    public function apiProductSearch(Request $request, ElasticsearchService $elasticsearchService){
+        $perPage = 30;
+        $products = $elasticsearchService->searchProducts($request, $perPage);
+        foreach ($products as $product) {
+            $reviewCount = count(ProductReview::where('product_id', $product->id)->get());
+            $average = round(ProductReview::where('product_id', $product->id)->avg('rate'), 1);
+            $percentage = ($average / 5) * 100;
+            $product->reviewCount = $reviewCount;
+            $product->average = $average;
+            $product->percentage = $percentage;
+            $product->photo = asset($product->photo);
+        }
+        return response()->json($products);
+    }
+
     public function apiTokenCreate(Request $request){
         $this->validate($request,[
             'email'=>'required|email',
