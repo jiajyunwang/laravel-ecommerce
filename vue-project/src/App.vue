@@ -1,7 +1,7 @@
 <script setup>
-import ProductIndex from './components/ProductIndex.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <ProductIndex />
+  <RouterView />
 </template>
