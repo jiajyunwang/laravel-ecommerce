@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ProductIndex from '@/components/ProductIndex.vue'
-import ProductDetail from '@/components/ProductDetail.vue'
-import Register from '@/components/Register.vue'
-import Login from '@/components/Login.vue'
-import Account from '@/components/Account.vue'
-import Cart from '@/components/Cart.vue'
-import Checkout from '@/components/Checkout.vue'
-import Orders from '@/components/Orders.vue'
-import OrderDetail from '@/components/OrderDetail.vue'
+import ProductIndex from '@/components/frontend/ProductIndex.vue'
+import ProductDetail from '@/components/frontend/ProductDetail.vue'
+import Register from '@/components/frontend/Register.vue'
+import Login from '@/components/frontend/Login.vue'
+import Account from '@/components/frontend/Account.vue'
+import Cart from '@/components/frontend/Cart.vue'
+import Checkout from '@/components/frontend/Checkout.vue'
+import Orders from '@/components/frontend/Orders.vue'
+import OrderDetail from '@/components/frontend/OrderDetail.vue'
+import AdminLogin from '@/components/backend/AdminLogin.vue'
 
 const routes = [
   { path: '/', component: ProductIndex },
@@ -19,6 +20,7 @@ const routes = [
   { path: '/checkout', component: Checkout },
   { path: '/orders', component: Orders },
   { path: '/order/:id', component: OrderDetail },
+  { path: '/admin/login', component: AdminLogin },
 ]
 
 const router = createRouter({
