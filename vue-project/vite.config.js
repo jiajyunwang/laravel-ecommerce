@@ -16,7 +16,15 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-      }
+      },
+      '/reviews': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/request-action': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
     }
   }
 })

@@ -126,7 +126,7 @@ onMounted(() => {
 
     <div class="product-list">
       <div v-for="product in products" :key="product.id" class="single-product">
-        <a :href="`/product-detail/${product.id}`">
+        <a :href="`/product/${product.id}`">
           <img class="product-img" :src="product.photo">
         </a>
         <p class="product-title">{{ product.title }}</p>
