@@ -9,6 +9,7 @@ import Checkout from '@/components/frontend/Checkout.vue'
 import Orders from '@/components/frontend/Orders.vue'
 import OrderDetail from '@/components/frontend/OrderDetail.vue'
 import AdminLogin from '@/components/backend/AdminLogin.vue'
+import AdminLayout from '@/components/backend/AdminLayout.vue'
 
 const routes = [
   { path: '/', component: ProductIndex },
@@ -21,6 +22,11 @@ const routes = [
   { path: '/orders', component: Orders },
   { path: '/order/:id', component: OrderDetail },
   { path: '/admin/login', component: AdminLogin },
+  {
+    path: '/admin',
+    component: AdminLayout,
+    children: [],
+  },
 ]
 
 const router = createRouter({

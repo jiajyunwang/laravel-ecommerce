@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/test', function () {
     return response()->json(['status' => 'API is working']);
@@ -14,6 +15,10 @@ Route::get('/user/info', [FrontendController::class, 'apiUserInfo']);
 
 Route::get('/products', [FrontendController::class, 'apiProducts']);
 Route::get('/products/search', [FrontendController::class, 'apiProductSearch']);
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/stats', [AdminController::class, 'apiStats']);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/user/checkout', [OrderController::class, 'apiCheckout']);

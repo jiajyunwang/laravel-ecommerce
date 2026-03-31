@@ -20,6 +20,16 @@ use Illuminate\Support\Facades\File;
 
 class AdminController extends Controller
 {
+    public function apiStats()
+    {
+        return response()->json([
+            'activeProducts'   => \Helper::getProductCount('active'),
+            'inactiveProducts' => \Helper::getProductCount('inactive'),
+            'unhandledOrders'  => \Helper::getAdminOrdertCount('unhandled'),
+            'shippingOrders'   => \Helper::getAdminOrdertCount('shipping'),
+        ]);
+    }
+
     public function purchaseType(Request $request){
         $products = Product::all();
         $type = $request->query('type');
