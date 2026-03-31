@@ -333,4 +333,44 @@ class OrderController extends Controller
 
         return redirect()->back();
     }
+
+    public function apiOrders(Request $request)
+    {
+        $type = $request->query('type', 'unhandled');
+        $page = $request->query('page', 1);
+        $orders = $this->order->userPaginate($type, $page);
+
+        return response()->json([
+            'orders' => $orders->items(),
+            'hasMore' => $orders->hasMorePages(),
+            'counts' => [
+                'unhandled' => Order::where('user_id', Auth::user()->id)->where('status', 'unhandled')->count(),
+                'shipping' => Order::where('user_id', Auth::user()->id)->where('status', 'shipping')->count(),
+            ],
+        ]);
+    }
+
+    public function apiReview(Request $request)
+    {
+        $data = $request->all();
+        $order = $this->order->userFind($data['order_id']);
+
+        $count = 0;
+        foreach ($order->order_details as $order_detail) {
+            $productId = Product::where('id', $order_detail->slug)
+                ->select('id')
+                ->first();
+            ProductReview::create([
+                'user_id'    => $order->user_id,
+                'product_id' => $productId->id,
+                'rate'       => $data['rate'][$count],
+                'review'     => $data['review'][$count],
+            ]);
+            $count++;
+        }
+        $order->isReview = true;
+        $order->save();
+
+        return response()->json(['success' => true]);
+    }
 }

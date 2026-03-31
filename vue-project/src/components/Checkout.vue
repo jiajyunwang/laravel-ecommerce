@@ -156,7 +156,7 @@ async function handleCheckout() {
       return
     }
 
-    window.location.href = '/user/order'
+    router.push('/orders')
   } finally {
     submitting.value = false
   }

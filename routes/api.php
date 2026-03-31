@@ -16,4 +16,6 @@ Route::get('/products/search', [FrontendController::class, 'apiProductSearch']);
 Route::middleware('auth')->group(function () {
     Route::get('/user/checkout', [OrderController::class, 'apiCheckout']);
     Route::post('/order/store', [OrderController::class, 'apiStore']);
+    Route::get('/user/orders', [OrderController::class, 'apiOrders']);
+    Route::post('/review', [OrderController::class, 'apiReview']);
 });
