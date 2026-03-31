@@ -236,7 +236,7 @@ async function submitReview() {
         <p class="order_status">訂單狀態: </p>
         <p class="status" :class="statusClass(type)">{{ statusLabel(type) }}</p>
       </div>
-      <a :href="`/user/order/order-detail/${order.id}`">
+      <RouterLink :to="`/order/${order.id}`">
         <table class="table table-cart">
           <thead>
             <tr>
@@ -253,7 +253,7 @@ async function submitReview() {
             </tr>
           </tbody>
         </table>
-      </a>
+      </RouterLink>
       <div class="amount">
         <label class="m-r-m">訂單合計:</label>
         <p class="text-danger">${{ order.total_amount }}</p>

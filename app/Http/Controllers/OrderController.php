@@ -334,6 +334,23 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
+    public function apiOrderDetail($id)
+    {
+        $order = $this->order->userFind($id);
+
+        if (!$order) {
+            return response()->json(['message' => '訂單不存在'], 404);
+        }
+
+        return response()->json([
+            'order' => $order,
+            'counts' => [
+                'unhandled' => Order::where('user_id', Auth::user()->id)->where('status', 'unhandled')->count(),
+                'shipping'  => Order::where('user_id', Auth::user()->id)->where('status', 'shipping')->count(),
+            ],
+        ]);
+    }
+
     public function apiOrders(Request $request)
     {
         $type = $request->query('type', 'unhandled');

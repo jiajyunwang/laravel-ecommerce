@@ -7,6 +7,7 @@ import Account from '@/components/Account.vue'
 import Cart from '@/components/Cart.vue'
 import Checkout from '@/components/Checkout.vue'
 import Orders from '@/components/Orders.vue'
+import OrderDetail from '@/components/OrderDetail.vue'
 
 const routes = [
   { path: '/', component: ProductIndex },
@@ -17,6 +18,7 @@ const routes = [
   { path: '/cart', component: Cart },
   { path: '/checkout', component: Checkout },
   { path: '/orders', component: Orders },
+  { path: '/order/:id', component: OrderDetail },
 ]
 
 const router = createRouter({
