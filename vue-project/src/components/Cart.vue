@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const carts = ref([])
 const selectedIds = ref([])
@@ -104,7 +107,7 @@ async function deleteSelected() {
 }
 
 function checkout() {
-  window.location.href = '/user/order/create'
+  router.push({ path: '/checkout', query: { check: selectedIds.value } })
 }
 
 onMounted(fetchCart)

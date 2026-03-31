@@ -180,7 +180,98 @@ class OrderController extends Controller
         return redirect()->route('user.order');
     }
 
-    public function repurchase($id) 
+    public function apiCheckout(Request $request)
+    {
+        $ids = $request->input('check', []);
+        if (empty($ids)) {
+            return response()->json(['message' => '未選擇商品'], 422);
+        }
+
+        $carts = [];
+        $subTotal = 0;
+        foreach ($ids as $id) {
+            $cart = Cart::where('user_id', Auth::user()->id)
+                ->with('product')
+                ->findOrFail($id);
+            $cart->title = $cart->product->title;
+            $cart->price = $cart->product->price;
+            $subTotal += $cart->amount;
+            $carts[] = $cart;
+        }
+
+        return response()->json([
+            'carts' => $carts,
+            'subTotal' => $subTotal,
+            'homeDeliveryFee' => config('shipping.home_delivery'),
+            'user' => [
+                'name' => Auth::user()->name,
+                'cellphone' => Auth::user()->cellphone,
+                'address' => Auth::user()->address,
+            ],
+        ]);
+    }
+
+    public function apiStore(Request $request)
+    {
+        $validated = $this->validate($request, [
+            'name'          => 'string|required',
+            'cellphone'     => 'string|digits:10|required',
+            'address'       => 'string|required',
+            'paymentMethod' => 'string|required',
+        ]);
+
+        $data = $request->all();
+
+        if ($request->paymentMethod === 'creditCard') {
+            unset($data['stripeToken']);
+            Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $charge = Stripe\Charge::create([
+                'amount'      => $request->totalAmount * 100,
+                'currency'    => 'TWD',
+                'source'      => $request->stripeToken,
+                'description' => 'Stripe Test Card Payment',
+            ]);
+        }
+
+        $ids = $data['product_id'];
+        $index = 0;
+        foreach ($ids as $id) {
+            $qty = $data['quantity'][$index];
+            DB::transaction(function () use ($id, $qty) {
+                $affected = Product::where('id', $id)
+                    ->where('stock', '>=', $qty)
+                    ->decrement('stock', $qty);
+                if ($affected !== 1) {
+                    throw new \Exception('庫存不足');
+                }
+            });
+            $index += 1;
+
+            if ($data['fromCart']) {
+                Cart::where('user_id', Auth::user()->id)->where('product_id', $id)->delete();
+            }
+        }
+
+        $order = $this->order->create($data);
+
+        $index = 0;
+        foreach ($ids as $id) {
+            $orderDetail = new OrderDetail;
+            $orderDetail->order_number = $order->order_number;
+            $product = Product::findOrFail($id);
+            $orderDetail->slug = $product->id;
+            $orderDetail->title = $product->title;
+            $orderDetail->price = $product->price;
+            $orderDetail->quantity = $data['quantity'][$index];
+            $index += 1;
+            $orderDetail->amount = $orderDetail->price * $orderDetail->quantity;
+            $orderDetail->save();
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function repurchase($id)
     {
         $order = $this->order->userFind($id);
 

@@ -54,6 +54,8 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::post('/chat/mark-as-read', [FrontendController::class, 'markAsRead']);
 });
 
+Route::prefix('api')->group(base_path('routes/api.php'));
+
 Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', [AdminController::class, 'purchaseType'])->name('admin');
     Route::get('/product', [AdminController::class, 'purchaseType']);
