@@ -405,6 +405,23 @@ class FrontendController extends Controller
         return response()->json($products);
     }
 
+    public function apiUserInfo()
+    {
+        if (!Auth::check()) {
+            return response()->json(['user' => null, 'cartCount' => 0]);
+        }
+
+        $cartCount = Cart::where('user_id', Auth::user()->id)->count();
+
+        return response()->json([
+            'user' => [
+                'email' => Auth::user()->email,
+                'role'  => Auth::user()->role,
+            ],
+            'cartCount' => $cartCount,
+        ]);
+    }
+
     public function apiTokenCreate(Request $request){
         $this->validate($request,[
             'email'=>'required|email',

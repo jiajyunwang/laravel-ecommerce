@@ -10,6 +10,8 @@ Route::get('/test', function () {
 
 Route::post('/tokens/create', [FrontendController::class, 'apiTokenCreate']);
 
+Route::get('/user/info', [FrontendController::class, 'apiUserInfo']);
+
 Route::get('/products', [FrontendController::class, 'apiProducts']);
 Route::get('/products/search', [FrontendController::class, 'apiProductSearch']);
 
