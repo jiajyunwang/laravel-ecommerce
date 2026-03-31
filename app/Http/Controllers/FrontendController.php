@@ -415,8 +415,10 @@ class FrontendController extends Controller
 
         return response()->json([
             'user' => [
+                'id'    => Auth::user()->id,
                 'email' => Auth::user()->email,
                 'role'  => Auth::user()->role,
+                'token' => session('token'),
             ],
             'cartCount' => $cartCount,
         ]);
