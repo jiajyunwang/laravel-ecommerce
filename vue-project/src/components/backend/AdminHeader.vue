@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, RouterLink } from 'vue-router'
 
 const route = useRoute()
 
@@ -28,7 +28,7 @@ const activeTab = computed(() => {
   if (path.startsWith('/admin/product')) {
     return type === 'unlisted' ? 'unlisted' : 'product'
   }
-  if (path.startsWith('/admin/order')) {
+  if (path.startsWith('/admin/orders')) {
     return type || 'unhandled'
   }
   return ''
@@ -51,26 +51,26 @@ const activeTab = computed(() => {
           <p>已下架(<span>{{ counts.inactiveProducts }}</span>)</p>
         </div>
       </a>
-      <a href="/admin/order?type=unhandled">
+      <RouterLink to="/admin/orders?type=unhandled">
         <div :class="activeTab === 'unhandled' ? 'border' : 'col'">
           <p>待出貨(<span class="count">{{ counts.unhandledOrders }}</span>)</p>
         </div>
-      </a>
-      <a href="/admin/order?type=shipping">
+      </RouterLink>
+      <RouterLink to="/admin/orders?type=shipping">
         <div :class="activeTab === 'shipping' ? 'border' : 'col'">
           <p>待收貨(<span class="count">{{ counts.shippingOrders }}</span>)</p>
         </div>
-      </a>
-      <a href="/admin/order?type=completed">
+      </RouterLink>
+      <RouterLink to="/admin/orders?type=completed">
         <div :class="activeTab === 'completed' ? 'border' : 'col'">
           <p>已完成</p>
         </div>
-      </a>
-      <a href="/admin/order?type=cancel">
+      </RouterLink>
+      <RouterLink to="/admin/orders?type=cancel">
         <div :class="activeTab === 'cancel' ? 'border' : 'col'">
           <p>已取消</p>
         </div>
-      </a>
+      </RouterLink>
     </div>
   </div>
 </template>

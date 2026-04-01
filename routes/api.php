@@ -27,6 +27,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/product/destroy/{id}', [ProductController::class, 'apiDestroy']);
     Route::get('/product/{id}', [ProductController::class, 'apiShow']);
     Route::post('/product/{id}/update', [ProductController::class, 'apiUpdate']);
+    Route::get('/orders', [AdminController::class, 'apiOrders']);
+    Route::get('/order/search', [AdminController::class, 'apiOrderSearch']);
+    Route::post('/order/to-shipping/{id}', [AdminController::class, 'apiToShipping']);
+    Route::post('/order/to-cancel/{id}', [AdminController::class, 'apiToCancel']);
 });
 
 Route::middleware('auth')->group(function () {

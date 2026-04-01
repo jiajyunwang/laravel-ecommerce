@@ -30,6 +30,66 @@ class AdminController extends Controller
         ]);
     }
 
+    public function apiOrders(Request $request)
+    {
+        $type = $request->query('type', 'unhandled');
+        $orders = Order::with('order_details')
+            ->where('status', $type)
+            ->paginate(10);
+
+        return response()->json([
+            'orders'   => $orders->items(),
+            'lastPage' => $orders->lastPage(),
+        ]);
+    }
+
+    public function apiOrderSearch(Request $request)
+    {
+        $this->validate($request, [
+            'orderNumber' => 'string|size:16|required',
+        ]);
+
+        $order = Order::where('order_number', $request->orderNumber)->first();
+        if (!$order) {
+            return response()->json(['message' => '訂單不存在'], 404);
+        }
+
+        $orders = Order::with('order_details')
+            ->where('order_number', $request->orderNumber)
+            ->paginate(1);
+
+        return response()->json([
+            'orders'   => $orders->items(),
+            'lastPage' => $orders->lastPage(),
+        ]);
+    }
+
+    public function apiToShipping($id)
+    {
+        $order = Order::where('status', 'unhandled')->where('id', $id)->first();
+        $order->status = 'shipping';
+        $order->save();
+        return response()->json(['success' => true]);
+    }
+
+    public function apiToCancel($id)
+    {
+        $order = Order::with('order_details')
+            ->where('status', 'unhandled')
+            ->where('id', $id)
+            ->first();
+        $order->status = 'cancel';
+        $order->save();
+        foreach ($order->order_details as $orderDetail) {
+            $product = Product::where('id', $orderDetail->slug)->first();
+            if ($product) {
+                $product->stock += $orderDetail->quantity;
+                $product->save();
+            }
+        }
+        return response()->json(['success' => true]);
+    }
+
     public function purchaseType(Request $request){
         $products = Product::all();
         $type = $request->query('type');
