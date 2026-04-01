@@ -85,9 +85,9 @@ function editProduct(id) {
       </div>
       <div v-if="type === 'listed'" class="right">
         <div class="btn-product-create right">
-          <a href="/admin/product/create">
+          <RouterLink to="/admin/product/create">
             <div><p><i class="ti-plus"></i> 新增商品</p></div>
-          </a>
+          </RouterLink>
         </div>
       </div>
     </div>

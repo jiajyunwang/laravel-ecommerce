@@ -20,6 +20,7 @@ Route::get('/products/search', [FrontendController::class, 'apiProductSearch']);
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/stats', [AdminController::class, 'apiStats']);
     Route::get('/products', [ProductController::class, 'apiIndex']);
+    Route::post('/product/store', [ProductController::class, 'apiStore']);
     Route::post('/product/destroy-products', [ProductController::class, 'apiDestroyProducts']);
     Route::post('/product/to-inactive/{id}', [ProductController::class, 'apiToInactive']);
     Route::post('/product/to-active/{id}', [ProductController::class, 'apiToActive']);

@@ -58,6 +58,24 @@ class ProductController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function apiStore(Request $request)
+    {
+        $this->validate($request, [
+            'title'       => 'string|required',
+            'description' => 'required',
+            'photo'       => 'image|required',
+            'stock'       => 'required|numeric',
+            'price'       => 'required|numeric',
+        ]);
+
+        $data = $request->all();
+        $data['photo'] = $this->imageStore($request->file('photo'));
+        $data['status'] = 'active';
+        Product::create($data);
+
+        return response()->json(['success' => true]);
+    }
+
     public function create()
     {
         return view('backend.product.create');
