@@ -16,6 +16,48 @@ use Storage;
 
 class ProductController extends Controller
 {
+    public function apiIndex(Request $request)
+    {
+        $type = $request->query('type', 'listed');
+        $status = $type === 'unlisted' ? 'inactive' : 'active';
+        return response()->json(Product::where('status', $status)->get());
+    }
+
+    public function apiToInactive($id)
+    {
+        $product = Product::where('status', 'active')->where('id', $id)->first();
+        $product->status = 'inactive';
+        $product->save();
+        Cart::where('product_id', $id)->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function apiToActive($id)
+    {
+        $product = Product::where('status', 'inactive')->where('id', $id)->first();
+        $product->status = 'active';
+        $product->save();
+        return response()->json(['success' => true]);
+    }
+
+    public function apiDestroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $this->imageDelete($product);
+        $product->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function apiDestroyProducts(Request $request)
+    {
+        foreach ($request->input('check', []) as $id) {
+            $product = Product::findOrFail($id);
+            $this->imageDelete($product);
+            $product->delete();
+        }
+        return response()->json(['success' => true]);
+    }
+
     public function create()
     {
         return view('backend.product.create');
