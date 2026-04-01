@@ -58,6 +58,32 @@ class ProductController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function apiShow($id)
+    {
+        return response()->json(Product::findOrFail($id));
+    }
+
+    public function apiUpdate(Request $request, $id)
+    {
+        $this->validate($request, [
+            'title'       => 'string|required',
+            'description' => 'required',
+            'photo'       => 'image',
+            'stock'       => 'required|numeric',
+            'price'       => 'required|numeric',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $data = $request->all();
+        if ($request->hasFile('photo')) {
+            $this->imageDelete($product);
+            $data['photo'] = $this->imageStore($request->file('photo'));
+        }
+        $product->fill($data)->save();
+
+        return response()->json(['success' => true]);
+    }
+
     public function apiStore(Request $request)
     {
         $this->validate($request, [

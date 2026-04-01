@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 
 const products = ref([])
 const selectedIds = ref([])
@@ -67,7 +68,7 @@ async function batchDelete() {
 }
 
 function editProduct(id) {
-  window.location.href = `/admin/product/${id}/edit`
+  router.push(`/admin/product/${id}/edit`)
 }
 </script>
 

@@ -25,6 +25,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/product/to-inactive/{id}', [ProductController::class, 'apiToInactive']);
     Route::post('/product/to-active/{id}', [ProductController::class, 'apiToActive']);
     Route::post('/product/destroy/{id}', [ProductController::class, 'apiDestroy']);
+    Route::get('/product/{id}', [ProductController::class, 'apiShow']);
+    Route::post('/product/{id}/update', [ProductController::class, 'apiUpdate']);
 });
 
 Route::middleware('auth')->group(function () {

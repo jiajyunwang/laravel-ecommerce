@@ -12,6 +12,7 @@ import AdminLogin from '@/components/backend/AdminLogin.vue'
 import AdminLayout from '@/components/backend/AdminLayout.vue'
 import AdminProductIndex from '@/components/backend/AdminProductIndex.vue'
 import AdminProductCreate from '@/components/backend/AdminProductCreate.vue'
+import AdminProductEdit from '@/components/backend/AdminProductEdit.vue'
 
 const routes = [
   { path: '/', component: ProductIndex },
@@ -30,6 +31,7 @@ const routes = [
     children: [
       { path: 'product', component: AdminProductIndex },
       { path: 'product/create', component: AdminProductCreate },
+      { path: 'product/:id/edit', component: AdminProductEdit },
     ],
   },
 ]
