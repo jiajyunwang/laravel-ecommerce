@@ -1,0 +1,53 @@
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Shared proxy headers
+    proxy_set_header Host              $http_host;
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    # Forward cookies so Laravel session auth works
+    proxy_pass_header Set-Cookie;
+
+    # REST API
+    location /api/ {
+        proxy_pass ${BACKEND_URL}/api/;
+    }
+
+    # Review fetch (web route)
+    location /reviews/ {
+        proxy_pass ${BACKEND_URL}/reviews/;
+    }
+
+    # Product action (web route)
+    location /request-action/ {
+        proxy_pass ${BACKEND_URL}/request-action/;
+    }
+
+    # User web routes (cart, chat, order actions, account)
+    location /user/ {
+        proxy_pass ${BACKEND_URL}/user/;
+    }
+
+    # Auth routes
+    location = /login {
+        proxy_pass ${BACKEND_URL}/login;
+    }
+    location = /logout {
+        proxy_pass ${BACKEND_URL}/logout;
+    }
+
+    # Admin PDF invoice (blade-rendered PDF, still served from Laravel)
+    location /admin/order/order-detail/ {
+        proxy_pass ${BACKEND_URL}/admin/order/order-detail/;
+    }
+
+    # Everything else: serve the Vue SPA
+    # Vue Router (createWebHistory) requires this so deep links work
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
