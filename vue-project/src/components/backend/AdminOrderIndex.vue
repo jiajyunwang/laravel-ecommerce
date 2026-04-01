@@ -66,7 +66,7 @@ const toShipping = (id) => apiPost(`/api/admin/order/to-shipping/${id}`)
 const toCancel   = (id) => apiPost(`/api/admin/order/to-cancel/${id}`)
 
 function downloadInvoice(id) {
-  window.open(`/admin/order/order-detail/${id}`, '_blank')
+  window.open(`/admin/orders/${id}/invoice`, '_blank')
 }
 
 async function search() {

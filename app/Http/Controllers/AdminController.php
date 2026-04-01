@@ -30,6 +30,12 @@ class AdminController extends Controller
         ]);
     }
 
+    public function apiOrderDetail($id)
+    {
+        $order = Order::with('order_details')->findOrFail($id);
+        return response()->json($order);
+    }
+
     public function apiOrders(Request $request)
     {
         $type = $request->query('type', 'unhandled');

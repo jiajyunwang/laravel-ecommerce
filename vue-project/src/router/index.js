@@ -14,6 +14,7 @@ import AdminProductIndex from '@/components/backend/AdminProductIndex.vue'
 import AdminProductCreate from '@/components/backend/AdminProductCreate.vue'
 import AdminProductEdit from '@/components/backend/AdminProductEdit.vue'
 import AdminOrderIndex from '@/components/backend/AdminOrderIndex.vue'
+import AdminOrderInvoice from '@/components/backend/AdminOrderInvoice.vue'
 
 const routes = [
   { path: '/', component: ProductIndex },
@@ -36,6 +37,7 @@ const routes = [
       { path: 'orders', component: AdminOrderIndex },
     ],
   },
+  { path: '/admin/orders/:id/invoice', component: AdminOrderInvoice },
 ]
 
 const router = createRouter({
