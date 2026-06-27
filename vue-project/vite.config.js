@@ -17,11 +17,11 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true,
       },
-      '/reviews': {
+      '/sanctum': {
         target: 'http://localhost:8000',
         changeOrigin: true,
       },
-      '/request-action': {
+      '/logout': {
         target: 'http://localhost:8000',
         changeOrigin: true,
       },
@@ -29,6 +29,14 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true,
       },
+      '/users': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/request-action': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      }
     }
   }
 })

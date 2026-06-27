@@ -89,7 +89,7 @@ class OrderController extends Controller
                 $product->save();
             }
         }
-        return redirect()->route('user.order', ['type' => 'unhandled']);
+        return response()->json(['success' => true]);
     }
 
     public function create(Request $request)
@@ -175,14 +175,13 @@ class OrderController extends Controller
             $orderDetail->amount = ($orderDetail->price)*($orderDetail->quantity);
             $orderDetail->save();
         }
-        $products = Product::all();
         
-        return redirect()->route('user.order');
+        return response()->json(['success' => true]);
     }
 
     public function apiCheckout(Request $request)
     {
-        $ids = $request->input('check', []);
+        $ids = $request->post('check', []);
         if (empty($ids)) {
             return response()->json(['message' => '未選擇商品'], 422);
         }

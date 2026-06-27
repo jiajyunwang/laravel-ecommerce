@@ -9,7 +9,12 @@ use Illuminate\Http\Request;
 class CartController extends Controller
 {
     public function index(){
-        return view('frontend.pages.cart');
+        $cart = Cart::with('product')
+            ->where('user_id',auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return response()->json(['success' => true, 'cart' => $cart]);
     }
 
     public function update(Request $request)
@@ -23,12 +28,13 @@ class CartController extends Controller
         return response()->json(['success' => true, 'message' => $cart->quantity]);  
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        $id = $request->cart_id;
         $cart = Cart::where('user_id', Auth::user()->id)->findOrFail($id);
         $cart->delete();
         
-        return redirect()->route('cart');
+        return response()->json(['success' => true]);  
     }
 
     public function destroyCarts(Request $request)
@@ -37,6 +43,6 @@ class CartController extends Controller
         foreach($ids as $id){
             Cart::where('user_id', Auth::user()->id)->findOrFail($id)->delete();
         }
-        return redirect()->route('cart');
+        return response()->json(['success' => true]);  
     }
 }

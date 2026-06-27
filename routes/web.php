@@ -10,35 +10,39 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\LoginController;
 
-Auth::routes(['register' => false]);
+// Auth::routes(['register' => false]);
 
 
-Route::get('/', [FrontendController::class, 'index'])->name('home');
+// Route::get('/', [FrontendController::class, 'index'])->name('home');
 
-Route::get('/user/login', [FrontendController::class, 'login'])->name('login.form');
+// Route::get('/user/login', [FrontendController::class, 'login'])->name('login.form');
 Route::post('/user/login', [FrontendController::class, 'loginSubmit'])->name('login.submit');
 
-Route::get('/logout', [FrontendController::class, 'logout'])->name('logout');
+Route::post('/logout', [FrontendController::class, 'logout'])->name('logout');
 
 Route::get('/user/register', [FrontendController::class, 'register'])->name('register.form');
 Route::post('/user/register', [FrontendController::class, 'registerSubmit'])->name('register.submit');
 
 Route::get('product-detail/{slug}', [FrontendController::class, 'productDetail'])->name('product-detail');
-Route::get('/reviews/fetch', [FrontendController::class, 'fetchReviews'])->name('reviews.fetch');
+// Route::get('/reviews/fetch', [FrontendController::class, 'fetchReviews'])->name('reviews.fetch');
 
-Route::get('/request-action/{slug}', [FrontendController::class, 'requestAction'])->name('request.action');
-
-Route::post('/cart-update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/request-action', [FrontendController::class, 'requestAction'])->name('request.action');
 
 Route::get('/product/search', [FrontendController::class, 'productSearch'])->name('product.search');
+
+Route::middleware('user')->get('/users', function () {
+    return isset(Auth::user()->email);
+});
 
 Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('/', [FrontendController::class, 'index'])->name('user');
     Route::get('/account', [FrontendController::class, 'account'])->name('account.form');
     Route::post('/account', [FrontendController::class, 'accountSubmit'])->name('account.submit');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
-    Route::get('/cart-destroy/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::get('/destroy-carts', [CartController::class, 'destroyCarts'])->name('destroy.carts');
+    Route::post('/cart-update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart-destroy', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/destroy-carts', [CartController::class, 'destroyCarts'])->name('destroy.carts');
+    Route::post('/checkout', [OrderController::class, 'apiCheckout']);
     Route::post('/review', [OrderController::class, 'review'])->name('review');
     Route::get('/order', [OrderController::class, 'index'])->name('user.order');
     Route::get('/orders/fetch', [OrderController::class, 'fetchOrders'])->name('orders.fetch');

@@ -96,19 +96,21 @@ class FrontendController extends Controller
     public function loginSubmit(Request $request){
         $this->validate($request,[
             'email'=>'email',
-            'password'=>'min:6',
+            'password'=>'min:8',
+        ],[
+            'email.email' => 'Email 格式錯誤',
+            'password.min' => '密碼至少需要 8 個字元',
         ]);
         $data= $request->all();
         if(Auth::attempt(['email' => $data['email'], 'password' => $data['password'], 'status'=>'active'])){
             $request->session()->regenerate();
             Session::put('user', $data['email']);
-            $token = $this->tokenCreate();
-            Session::put('token', $token);
-            return redirect()->route('home');
+            // $token = $this->tokenCreate();
+            // Session::put('token', $token);
+            return response()->json(['user' => [ 'email' => Auth::user()->email ]]);
         }
         else{
-            request()->session()->flash('error','電子郵件和密碼無效，請重試！');
-            return redirect()->back();
+            return response()->json(['messages' => '帳號或密碼錯誤'], 400);
         }
     }
 
@@ -123,12 +125,17 @@ class FrontendController extends Controller
     public function logout(){
         Session::forget('user');
         Auth::logout();
-        request()->session()->flash('success','Logout successfully');
-        return redirect()->route('home');
+        return response()->json(['message' => '帳號或密碼錯誤']);
     }
 
     public function account(){
-        return view('frontend.pages.account');
+        return response()->json([
+            'email' => Auth::user()->email,
+            'nickname' => Auth::user()->nickname,
+            'name' => Auth::user()->name,
+            'cellphone' => Auth::user()->cellphone,
+            'address' => Auth::user()->address,
+        ]);
     }
 
     public function accountSubmit(Request $request){
@@ -160,13 +167,30 @@ class FrontendController extends Controller
             $review->percentage = ($review->rate)/5*100;
         }
 
-        return view('frontend.pages.product_detail')
-                ->with('product', $product)
-                ->with('homeDeliveryFee', $homeDeliveryFee)
-                ->with('reviews', $reviews)
-                ->with('average', $average)
-                ->with('percentage', $percentage)
-                ->with('reviewCount', $reviewCount);
+        $result = [
+            'product' => $product, 
+            'homeDeliveryFee' => $homeDeliveryFee,
+            'reviews' => $reviews,
+            'average' => $average,
+            'percentage' => $percentage,
+            'reviewCount' => $reviewCount,
+        ];
+
+        if(Auth::check()) {
+            $already_cart = Cart::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
+            $result['alreadyInCart'] = $already_cart->quantity ?? 0;
+        }
+
+
+        // return view('frontend.pages.product_detail')
+        //         ->with('product', $product)
+        //         ->with('homeDeliveryFee', $homeDeliveryFee)
+        //         ->with('reviews', $reviews)
+        //         ->with('average', $average)
+        //         ->with('percentage', $percentage)
+        //         ->with('reviewCount', $reviewCount);
+
+        return response()->json($result);  
     }
 
     public function fetchReviews(Request $request)
@@ -186,14 +210,17 @@ class FrontendController extends Controller
         return response()->json($reviews);
     }
 
-    public function requestAction(Request $request, $slug){
+    public function requestAction(Request $request){
         if(!Auth::check()) {
-            return redirect()->route('login.form');
+            // return redirect()->route('login.form');
+            return response()->json(['unauthorized' => true]);
         }
         
         $request->validate([
             'quantity' => 'required',
         ]);
+
+        $slug = $request->product_id;
 
         if($request->requestAction=="checkout") {
             $products = [];
@@ -206,11 +233,17 @@ class FrontendController extends Controller
             $product->product_id = $product->id;
             $homeDeliveryFee = config('shipping.home_delivery');
 
-            return view('frontend.pages.checkout')
-                    ->with('carts', $products)
-                    ->with('subTotal', $subTotal)
-                    ->with('fromCart', $fromCart)
-                    ->with('homeDeliveryFee', $homeDeliveryFee);
+            return response()->json([
+                'carts' => $products, 
+                'subTotal' => $subTotal,
+                'fromCart' => $fromCart,
+                'homeDeliveryFee' => $homeDeliveryFee,
+                'user' => [
+                    'name' => Auth::user()->name,
+                    'cellphone' => Auth::user()->cellphone,
+                    'address' => Auth::user()->address,
+                ],
+            ]);
         }
         else {
             $product = Product::where('id', $slug)->first();
@@ -418,7 +451,6 @@ class FrontendController extends Controller
                 'id'    => Auth::user()->id,
                 'email' => Auth::user()->email,
                 'role'  => Auth::user()->role,
-                'token' => session('token'),
             ],
             'cartCount' => $cartCount,
         ]);

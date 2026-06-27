@@ -17,6 +17,10 @@ Route::get('/user/info', [FrontendController::class, 'apiUserInfo']);
 Route::get('/products', [FrontendController::class, 'apiProducts']);
 Route::get('/products/search', [FrontendController::class, 'apiProductSearch']);
 
+Route::get('/product-detail/{slug}', [FrontendController::class, 'productDetail']);
+Route::get('/reviews/fetch', [FrontendController::class, 'fetchReviews']);
+
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/stats', [AdminController::class, 'apiStats']);
     Route::get('/products', [ProductController::class, 'apiIndex']);
@@ -35,7 +39,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/user/checkout', [OrderController::class, 'apiCheckout']);
     Route::post('/order/store', [OrderController::class, 'apiStore']);
     Route::get('/user/orders', [OrderController::class, 'apiOrders']);
     Route::get('/user/order/{id}', [OrderController::class, 'apiOrderDetail']);

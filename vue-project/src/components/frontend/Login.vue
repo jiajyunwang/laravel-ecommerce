@@ -1,9 +1,13 @@
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const form = ref({
-  email: '',
-  password: '',
+    email: '',
+    password: '',
 })
 
 const errors = ref({})
@@ -11,28 +15,32 @@ const errorMessage = ref('')
 const submitting = ref(false)
 
 async function submit() {
-  errors.value = {}
-  errorMessage.value = ''
-  submitting.value = true
-  try {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(form.value),
-    })
-    const data = await response.json()
-    if (!response.ok) {
-      errors.value = data.errors ?? {}
-      errorMessage.value = data.message ?? ''
-    } else {
-      window.location.href = '/'
+    errors.value = {}
+    errorMessage.value = ''
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
+        errors.value.email = ['請輸入有效的電子郵件地址']
+        return
     }
-  } finally {
-    submitting.value = false
-  }
+    if (form.value.password.length < 8) {
+        errors.value.password = ['密碼至少需要8個字元']
+        return
+    }
+    
+    submitting.value = true
+    try {
+        await axios.get('/sanctum/csrf-cookie');
+        const response = await axios.post('/user/login', form.value)    
+        const data = response.data
+        router.push('/')
+
+    } catch (error) {
+        const data = error.response.data
+        errors.value = data.errors ?? {}
+        errorMessage.value = data.messages ?? ''
+    } finally {
+        submitting.value = false
+    }
 }
 </script>
 
